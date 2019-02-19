@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -16,11 +17,9 @@ void go() {
     do {
         //gets the input from the user
         cur_char = getchar();
-
         //allocate memory and assign the current char
         calloc(i, i * sizeof(char));
         *(input + i * sizeof(char)) = cur_char;
-
         ++i;
 
     } while(cur_char != '\n');
@@ -49,7 +48,7 @@ void getCommand() {
         fgets(input, 5, stdin);
         invalid_command = false;
         //reads for which command the user has entered
-        if(strcmp(input, "look") == 0) {//can I check for strings like that?
+        if(strcmp(input, "look") == 0) {
             look();
         } else if(strcmp(input, "go") == 0) {
             go();
@@ -67,5 +66,6 @@ void getCommand() {
 }
 
 int main(int argc, char* argv[]){
-    printf("Bitch I'm a cow");
+
+    printf("i'm not a cat\n");
 }
