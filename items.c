@@ -1,9 +1,14 @@
+
 #include "items.h"
 #include <string.h>
 
 Item *items(char* name, char* description, Item *next) {
     Item *new_item = NULL;
     new_item = (Item *) malloc(sizeof(Item));
+    if (new_item == NULL) {
+        printf("malloc failed\n");
+        exit(EXIT_FAILURE);
+    }
     // assign the passed variables
     new_item->name = name;
     new_item->description = description;
@@ -45,26 +50,23 @@ void item_take(Item **items, char *target) {
     dummy = NULL;
 }
 
-#ifndef DEBUG
-int main(void) {
-    // initialization
-    Item *itemsRoom1 = items("bronze key", "a dull bronze key",
-                           items("rope", "a leather-bound rope", items("knife", "a rusty shank", NULL)));
-    Item *itemsRoom2 = items("lamp", "ikea lamp",
-                           items("table", "#1 dining table", NULL));
-                           // print before removal
-    printf("before\nname: %s, desc: %s\n", item_name(itemsRoom1), item_description(itemsRoom1));
-    printf("name: %s, desc: %s\n", item_name(itemsRoom1->next), item_description(itemsRoom1->next));
-
-    item_take(&itemsRoom1, "bronze key");
-    // post removal
-    printf("before\nname: %s, desc: %s\n", item_name(itemsRoom1), item_description(itemsRoom1));
-    printf("name: %s, desc: %s\n", item_name(itemsRoom1->next), item_description(itemsRoom1->next));
-
-    return 0;
-}
-#endif
-
-// Item *itemArray(){
+// #ifndef DEBUG
+// int main(void) {
+//     // initialization
+//     Item *itemsRoom1 = items("bronze key", "a dull bronze key",
+//                            items("rope", "a leather-bound rope", items("knife", "a rusty shank", NULL)));
+//     Item *itemsRoom2 = items("lamp", "ikea lamp",
+//                            items("table", "#1 dining table", NULL));
+//                            // print before removal
+//     printf("before\nname: %s, desc: %s\n", item_name(itemsRoom1), item_description(itemsRoom1));
+//     printf("name: %s, desc: %s\n", item_name(itemsRoom1->next), item_description(itemsRoom1->next));
 //
+//     item_take(&itemsRoom1, "bronze key");
+//     // post removal
+//     printf("before\nname: %s, desc: %s\n", item_name(itemsRoom1), item_description(itemsRoom1));
+//     printf("name: %s, desc: %s\n", item_name(itemsRoom1->next), item_description(itemsRoom1->next));
+//
+//     return 0;
+// }
+// #endif
 // }
