@@ -5,5 +5,5 @@ prog = textgame
 edit : $(objects)
 	gcc -o edit $(objects)
 items.o : items.h
-rooms.o : rooms.h
+rooms.o : rooms.h items.h
 
