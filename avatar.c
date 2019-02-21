@@ -31,10 +31,10 @@ void add_to_inventory(Avatar *avatar, Item *item) {
 }
 
 //changes the room that the avatar currently is in
-void go_to_room(Avatar avatar, enum direction d) {
+void go_to_room(Avatar avatar, enum direction dir) {
     Room *room = get_location(avatar);
     // determines the desired direction and executes the appropriate function
-    switch (d) {
+    switch (dir) {
         case NORTH:
             set_location(avatar, room->north);
         case EAST:

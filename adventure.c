@@ -66,6 +66,9 @@ void getCommand() {
 }
 
 int main(int argc, char* argv[]){
+    Room *main_room = malloc(sizeof(main_room));
+    main_room = room()
+
 
     printf("i'm not a cat\n");
 }
