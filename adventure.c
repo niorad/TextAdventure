@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include "rooms.h"
 
 //allows for the user to look at what is in the room
 void look() {
@@ -67,7 +68,9 @@ void getCommand() {
 
 int main(int argc, char* argv[]){
     Room *main_room = malloc(sizeof(main_room));
-    main_room = room()
+    Item *test_item = items("test", "debugging", NULL);
+
+    main_room = room("test room", test_item);
 
 
     printf("i'm not a cat\n");
