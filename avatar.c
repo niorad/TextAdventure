@@ -65,6 +65,7 @@ int take(Avatar *avatar, char *object) {
 	if (to_take == NULL) {
 		return -1;
 	}
+
 	add_item(&(avatar->backpack), to_take);
 	return 0;
 }

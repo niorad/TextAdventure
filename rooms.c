@@ -41,7 +41,6 @@ void list_connections(Room *room) {
 	}
 }
 
-
 void print_room(Room *room) {
 	printf("%s \n", room->description);
 
