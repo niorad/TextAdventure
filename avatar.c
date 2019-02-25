@@ -48,3 +48,40 @@ int go_to_room(Avatar *avatar, enum direction dir) {
     set_location(avatar, room->connections[dir]);
     return 0;
 }
+
+int take(Avatar *avatar, char *object) {
+    return 0;
+}
+
+int use(Avatar *avatar, char *object) {
+    return 0;
+}
+
+int drop(Avatar *avatar, char *object) {
+
+    struct Item *
+
+    if (avatar->backpack == NULL) {
+        return -1;
+    }
+
+    struct Item *dummy = *item, *prev;
+
+
+    if (dummy != NULL && strcmp(dummy->name, target) == 0) {
+        *item = dummy->next;
+        free(dummy);
+    }
+    return 0;
+
+
+    while (dummy != NULL && strcmp(dummy->name, target) != 0) {
+        prev = dummy;
+        dummy = dummy->next;
+    }
+
+    prev->next = dummy->next;
+    free(dummy);
+    dummy = NULL;
+
+}

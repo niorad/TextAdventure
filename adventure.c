@@ -24,19 +24,6 @@ void go() {
 
     } while(cur_char != '\n');
 }
-//allows the user to take an item out of the room they're currently in
-void take() {
-
-}
-//allows the user to use an item in their inventory
-void use() {
-
-}
-//allows the user to reomve an item from their inventory and place it in the room they are currently in
-void drop() {
-
-}
-
 //checks the user for what direction they want to go in
 void getCommand() {
     char *input;
