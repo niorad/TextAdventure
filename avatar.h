@@ -2,8 +2,8 @@
 #include "rooms.h"
 
 typedef struct avatar {
-    Room *location;
-    Item *backpack;
+	Room *location;
+	Item *backpack;
 } Avatar;
 
 // constructor
@@ -21,11 +21,11 @@ void set_location(Avatar *avatar, Room *room);
 void add_to_inventory(Avatar *avatar, Item *item);
 
 //changes the room that the avatar currently is in
-void go_to_room(Avatar *avatar, enum direction dir);
+int go_to_room(Avatar *avatar, enum direction dir);
 
 // inventory modifiers
-int take(Avatar *avatar, char *object);
-
 int use(Avatar *avatar, char *object);
+
+int take(Avatar *avatar, char *object);
 
 int drop(Avatar *avatar, char *object);
