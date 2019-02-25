@@ -1,15 +1,29 @@
+#include "avatar.h"
+
 /*
  * prog: avatar
  * ------------
- *
- *
- *
- *
- *
  */
 
+Avatar *avatar(Room *location, Item *backpack) {
+    Avatar *new_avatar = NULL;
+    new_avatar = (Avatar *) malloc(sizeof(Avatar));
+    // checking for null location, doesn't need to be in final build
+    #IFDEF DEBUG
+    if (location == NULL) {
+        printf("WARNING: avatar's location not set");
+    }
+    #ENDIF
+    if (new_avatar == NULL) {
+        printf("malloc failed\n");
+        exit(EXIT_FAILURE);
+    }
 
-// getter methods
+    new_avatar->location = location;
+    new_avatar->backpack = backpack;
+    return new_avatar;
+ }
+
 Item *get_inventory(Avatar *avatar) {
     return avatar->backpack;
 }
@@ -18,36 +32,19 @@ Room *get_location(Avatar *avatar) {
     return avatar->location;
 }
 
-// setter methods
-void set_location(Avatar avatar, Room* room){
+void set_location(Avatar *avatar, Room* room){
     avatar->location = room;
 }
 
-// adds an item to the backpack
 void add_to_inventory(Avatar *avatar, Item *item) {
     item->next = avatar->backpack;
     avatar->backpack = item;
 }
 
-//changes the room that the avatar currently is in
-void go_to_room(Avatar avatar, enum direction dir) {
-    Room *room = get_location(avatar);
+int go_to_room(Avatar *avatar, enum direction dir) {
     // determines the desired direction and executes the appropriate function
-    switch (dir) {
-        case NORTH:
-            set_location(avatar, room->north);
-        case EAST:
-            set_location(avatar, room ->east);
-        case SOUTH:
-            set_location(avatar, room->south);
-        case WEST:
-            set_location(avatar, room->west);
-        case UP:
-            set_location(avatar, room->up);
-        case DOWN:
-            set_location(avatar, room->down);
-        default:
-            printf("not a valid room");
-            exit(EXIT_FAILURE);
-    }
+    Room *room = get_location(avatar);
+    if (room->connections[dir] == NULL) return -1;
+    set_location(avatar, room->connections[dir]);
+    return 0;
 }

@@ -1,9 +1,7 @@
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <stdbool.h>
-#include <string.h>
-#include "rooms.h"
+#include "avatar.h"
+
 #define PRINT_TEST(n) printf("test %i \n", n)
 
 //allows for the user to look at what is in the room
@@ -46,7 +44,7 @@ void getCommand() {
     bool invalid_command = false;
 
     //gets the command that the user entered
-    do{
+    do {
         fgets(input, 5, stdin);
         invalid_command = false;
         //reads for which command the user has entered

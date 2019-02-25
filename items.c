@@ -1,6 +1,5 @@
 
 #include "items.h"
-#include <string.h>
 
 Item *items(char* name, char* description, Item *next) {
     Item *new_item = NULL;

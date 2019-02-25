@@ -1,7 +1,4 @@
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include "items.h"
 
 /* by having each cardinal direction be (n + 3 % 6) elements away from one's opposite

@@ -1,7 +1,7 @@
 
-SRC = items.c rooms.c adventure.c
-OBJ = items.o rooms.o adventure.o
-PROG = fix
+SRC = items.c rooms.c adventure.c avatar.c
+OBJ = items.o rooms.o adventure.o avatar.o
+PROG = textgame
 DEPS = $(OBJS:.o=.h)
 
 $(PROG): $(OBJ)
