@@ -8,7 +8,7 @@ bool has_object(JSON_member data, string object_name) {
 
 }
 
-//checks the JSON file and sees if there is another object that can be parseds
+//checks the JSON file and sees if there is another object that can be parsed
 bool has_next_member() {
 
 }

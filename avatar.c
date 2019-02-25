@@ -23,7 +23,6 @@ void set_location(Avatar avatar, Room* room){
     avatar->location = room;
 }
 
-
 // adds an item to the backpack
 void add_to_inventory(Avatar *avatar, Item *item) {
     item->next = avatar->backpack;

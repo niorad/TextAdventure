@@ -1,6 +1,5 @@
 
 #include "rooms.h"
-#include "items.h"
 
 typedef struct avatar {
     Room *location;

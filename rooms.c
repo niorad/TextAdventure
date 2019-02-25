@@ -1,7 +1,8 @@
 
-# include "rooms.h"
+#include "rooms.h"
 
-Room *room(char* description, Item* items) {
+Room *room(char *description, Item *items) {
+
     Room *new_room = NULL;
     new_room = (Room *) malloc(sizeof(Room));
 
@@ -16,29 +17,26 @@ Room *room(char* description, Item* items) {
 }
 
 Room *add_room(Room *room, Room *new_room, enum direction d) {
-    switch(d) {
-        case NORTH:
-            room->north = new_room;
-            break;
-        case EAST:
-            room->east = new_room;
-            break;
-        case SOUTH:
-            room->south = new_room;
-            break;
-        case WEST:
-            room->west = new_room;
-            break;
-        case UP:
-            room->up = new_room;
-            break;
-        case DOWN:
-            room->down = new_room;
-            break;
-        default:
-            printf("Not a valid direction!\n");
-            exit(EXIT_FAILURE);
+    room->connections[d]           = new_room;
+    new_room->connections[(d+3)%6] = room;
+    return room;
+}
 
-        return room;
+void print_room(Room *room) {
+    printf("%s \n", room->description);
+
+    // iteration pointer initialization
+    Item *dummy_item = room->items;
+
+    printf("inventory: \n");
+    while (dummy_item != NULL) {
+        printf("%s \n", dummy_item->name);
+        ++dummy_item;
+    }
+
+    for (int i = 0; i < 6; ++i) {
+        printf("%s, %i \n",
+                            (room->connections[i] != NULL ? room->connections[i]->description : "empty")
+                            , i);
     }
 }

@@ -4,21 +4,23 @@
 #include <stdlib.h>
 #include "items.h"
 
-enum direction {NORTH, SOUTH, EAST, WEST, UP, DOWN};
+/* by having each cardinal direction be (n + 3 % 6) elements away from each other
+ * we can save space by using one enum
+ */
+enum direction {NORTH, EAST, UP ,SOUTH, WEST, DOWN};
 
 // struct declaration
 typedef struct room {
   char *description;
   Item *items;
-  struct room *north;
-  struct room *south;
-  struct room *east;
-  struct room *west;
-  struct room *up;
-  struct room *down;
+  struct room **connections;
 } Room;
 
 // constructor
 Room *room(char* description, Item* items);
 
-Room *addRoom(Room *room, Room *new_room, enum direction d);
+// link rooms based on a passed direction
+Room *add_room(Room *room, Room *new_room, enum direction d);
+
+// prints the room for debugging purposes
+void print_room(Room *room);
