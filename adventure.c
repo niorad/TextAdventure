@@ -11,19 +11,19 @@ void get_command(Avatar *avatar) {
 	bool invalid_command = false;
 	// TODO: parse input: command "arguments"
 	// gets the command that the user entered
-	// do {
-	while(fgets(input, 30, stdin) != NULL)
-	{
-		printf("%s\n", input);
-	}
 
-	printf("passed");
-	//  char dummychar = '0';
-	//  int i = 0;
-	//  for (; dummychar != ' ' || dummychar != '\0'; ++i) {
-	//      command[i] = input[i];
-	//  }
-	//  strcpy(arg, input + i);
+	sscanf(input, "%s %s", command, arg);
+
+	// do {
+	//
+	//
+	//  printf("passed");
+	//  // //  char dummychar = '0';
+	//  // //  int i = 0;
+	//  // //  for (; dummychar != ' ' || dummychar != '\n'; ++i) {
+	//  //      command[i] = input[i];
+	//  //  }
+	//  //  strcpy(arg, input + i);
 	//
 	//
 	//  invalid_command = false;
