@@ -13,7 +13,6 @@ Room *room(char *description, Item *items) {
 
     new_room->description = description;
     new_room->items = items;
-    // new_room->connections = {NULL};
     return new_room;
 }
 
@@ -27,6 +26,10 @@ Room *add_room(Room *room, Room *new_room, enum direction d) {
     return room;
 }
 
+// void free_rooms(Room *room) {
+//     free(room);
+// }
+
 void print_room(Room *room) {
     printf("%s \n", room->description);
 
@@ -36,8 +39,8 @@ void print_room(Room *room) {
     printf("inventory: \n");
     while (dummy_item != NULL) {
         printf("%s \n", dummy_item->name);
-        ++dummy_item;
+        dummy_item = dummy_item->next;
     }
     Room *roomcon = room->connections[0];
-    printf("%s\n", roomcon->description);
+    printf("%s \n", roomcon->description);
 }

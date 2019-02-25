@@ -74,7 +74,7 @@ int main(void){
     PRINT_TEST(1);
     Room *main_room = room("main", test_item);
     PRINT_TEST(2);
-    Room *other_room = room("main", other_item);
+    Room *other_room = room("other", other_item);
     PRINT_TEST(3);
     add_room(main_room, other_room, 0);
     PRINT_TEST(4);
