@@ -4,16 +4,15 @@
 #include <stdlib.h>
 #include "items.h"
 
-/* by having each cardinal direction be (n + 3 % 6) elements away from each other
- * we can save space by using one enum
- */
+/* by having each cardinal direction be (n + 3 % 6) elements away from one's opposite
+   we can save space by using one enum */
 enum direction {NORTH, EAST, UP ,SOUTH, WEST, DOWN};
 
 // struct declaration
 typedef struct room {
   char *description;
   Item *items;
-  struct room **connections;
+  struct room *connections[6];
 } Room;
 
 // constructor

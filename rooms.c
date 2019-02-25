@@ -13,12 +13,17 @@ Room *room(char *description, Item *items) {
 
     new_room->description = description;
     new_room->items = items;
+    // new_room->connections = {NULL};
     return new_room;
 }
 
 Room *add_room(Room *room, Room *new_room, enum direction d) {
-    room->connections[d]           = new_room;
-    new_room->connections[(d+3)%6] = room;
+    if (d < 0 || 5 < d) {
+        return NULL;
+    }
+    room->connections[d] = new_room;
+    new_room->connections[(d+3) % 6] = room;
+
     return room;
 }
 
@@ -33,10 +38,6 @@ void print_room(Room *room) {
         printf("%s \n", dummy_item->name);
         ++dummy_item;
     }
-
-    for (int i = 0; i < 6; ++i) {
-        printf("%s, %i \n",
-                            (room->connections[i] != NULL ? room->connections[i]->description : "empty")
-                            , i);
-    }
+    Room *roomcon = room->connections[0];
+    printf("%s\n", roomcon->description);
 }
