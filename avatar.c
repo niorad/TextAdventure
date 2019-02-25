@@ -45,7 +45,9 @@ void add_to_inventory(Avatar *avatar, Item *item) {
 int go_to_room(Avatar *avatar, enum direction dir) {
 	// determines the desired direction and executes the appropriate function
 	Room *room = get_location(avatar);
-	if (room->connections[dir] == NULL) return -1;
+	if (room->connections[dir] == NULL) {
+		return -1;
+	}
 	set_location(avatar, room->connections[dir]);
 	return 0;
 }
