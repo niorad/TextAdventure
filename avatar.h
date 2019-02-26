@@ -1,6 +1,16 @@
 
 #include "rooms.h"
 
+/*
+ * Struct: Avatar
+ * ------------
+ * models a sprite in the game (ex: player)
+ *
+ * Functions: provide means of
+ * 		interacting with the game environment and
+ *		modifying fields belonging to the avatar
+ */
+
 typedef struct avatar {
 	Room *location;
 	Item *backpack;
