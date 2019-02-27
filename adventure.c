@@ -1,5 +1,4 @@
 
-#include <stdbool.h>
 #include "avatar.h"
 
 // #define PRINT_TEST(n) printf("test %i \n", n)
@@ -57,28 +56,35 @@ void get_command(Avatar *avatar) {
 // creates the game environment and all objects within it
 int init_game(Avatar **player) {
 	Item *test_item = items("apple", "debugging", NULL);
+	Item *test_use =  useable_items("key", "debug", "test", "used", NULL);
 	Room *main_room = room("test", NULL);
 	Room *northen_room = room("northern", NULL);
 	main_room = add_room(main_room, northen_room, NORTH);
 	add_item(&(main_room->items), test_item);
+	add_item(&(main_room->items), test_use);
 	// list_connections(main_room);
 	*player = avatar(main_room, NULL);
 	return 0;
 }
 
 int play_game() {
-	Avatar **player;
-	init_game(player);
+	Avatar *player;
+	init_game(&player);
 	bool game_over;
 	// printf
 	// while (!game_over) {
-	// 	get_command(player);
+	//  get_command(player);
 	// }
 	// initialize the game environment
 	// TODO: make the rooms
-	// list_items(&(main_room->items));
-	get_command(*player);
-	// list_items(&(player->backpack));
+	Room *main_room = get_location(player);
+	list_items(&(main_room->items));
+	get_command(player);
+	list_items(&(player->backpack));
+	get_command(player);
+	list_items(&(player->backpack));
+	get_command(player);
+	list_items(&(player->backpack));
 	return 0;
 }
 

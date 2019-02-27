@@ -6,7 +6,7 @@
  * --------------------------
  * constructs a new avatar struct given the passed specifications
  * params:
- * 		*location  :  where the avatar is located at initialization
+ *      *location  :  where the avatar is located at initialization
  *		type       :  pointer to Room struct
  *
  *		*backpack  :  the avatar's inventory
@@ -48,11 +48,11 @@ void set_location(Avatar *avatar, Room* room){
  * function: add_to_inventory
  * --------------------------
  * params:
- * 		*avatar  :  specified sprite in existing game state
- * 		type     :  pointer to Avatar struct
+ *      *avatar  :  specified sprite in existing game state
+ *      type     :  pointer to Avatar struct
  *
- * 		*item    :  object chosen for addition
- * 		type     :  pointer to Item struct
+ *      *item    :  object chosen for addition
+ *      type     :  pointer to Item struct
  *
  * adds the specified item to the avatar's inventory
  * to avoid using additional memory for a tail pointer, items
@@ -70,11 +70,11 @@ void add_to_inventory(Avatar *avatar, Item *item) {
  * function: go_to_room
  * --------------------------
  * params:
- * 		*avatar  :  specified sprite in existing game state
- * 		type     :  pointer to Avatar struct
+ *      *avatar  :  specified sprite in existing game state
+ *      type     :  pointer to Avatar struct
  *
- * 		dir		 :  enumeration of cardinal directions {NORTH, EAST, UP,SOUTH, WEST, DOWN}
- * 		type 	 :  enum direction
+ *      dir		 :  enumeration of cardinal directions {NORTH, EAST, UP,SOUTH, WEST, DOWN}
+ *      type     :  enum direction
  *
  * given the passed directional, checks that the corresponding
  * room exists and relocates the sprite.
@@ -100,8 +100,16 @@ int go_to_room(Avatar *avatar, enum direction dir) {
 
 int use(Avatar *avatar, char *object) {
 	Room *curr_room = get_location(avatar);
-
-	// free();
+	Item *to_use = remove_item(&(avatar->backpack), object);
+	if (to_use == NULL) {
+		return -1;
+	}
+	if (strcmp(curr_room->description, to_use->use_room)) {
+		printf("%s \n", to_use->use_description);
+		free(to_use);
+	} else {
+		add_item(&(avatar->backpack), to_use);
+	}
 	return 0;
 }
 

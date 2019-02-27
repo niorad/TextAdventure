@@ -1,18 +1,24 @@
 
 #include "items.h"
 
-Item *items(char* name, char* description, Item *next) {
+Item *useable_items(char *name, char *description, char *use_room, char *use_description, Item *next) {
 	Item *new_item = NULL;
 	new_item = (Item *) malloc(sizeof(Item));
 	if (new_item == NULL) {
 		printf("malloc failed\n");
 		exit(EXIT_FAILURE);
 	}
-	// assign the passed variables
+
 	new_item->name = name;
 	new_item->description = description;
+	new_item->use_room = use_room;
+	new_item->use_description = use_description;
 	new_item->next = next;
 	return new_item;
+}
+
+Item *items(char *name, char *description, Item *next) {
+	return useable_items(name, description, "", "", next);
 }
 
 char *item_name(Item *item) {
@@ -33,6 +39,7 @@ void add_item(Item **list, Item *to_add) {
 		return;
 	}
 	to_add->next = *list;
+	*list = to_add;
 }
 
 Item *remove_item(Item **list, char *object) {
@@ -55,6 +62,18 @@ Item *remove_item(Item **list, char *object) {
 	prev->next = dummy->next;
 	// if object is not found, returns NULL
 	return ret_ptr;
+}
+
+void free_item(Item *to_free) {
+	free(to_free);
+}
+
+void free_items(Item **list) {
+	Item *dummy = *list;
+	if (dummy->next != NULL) {
+		free_items(&(dummy->next));
+	}
+	free_item(*list);
 }
 
 void list_items(Item **list) {
