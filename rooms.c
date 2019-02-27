@@ -1,6 +1,23 @@
 
 #include "rooms.h"
 
+/*
+ * function: room
+ * --------------------------
+ * constructs a new Room struct given the passed specifications
+ * 		acts as a container within the game state
+ * params:
+ *      *description  :  the room's identifier in the backend
+ * 						 visual representation on the frontend
+ *		type          :  pointer to Room struct
+ *
+ *		*items  	  :  dynamically allocated list of items contained within the room
+ *		type          :  pointer to Item struct
+ *
+ * returns : pointer to the new struct
+ * type	   : (Room *)
+ */
+
 Room *room(char *description, Item *items) {
 
 	Room *new_room = NULL;
@@ -16,13 +33,34 @@ Room *room(char *description, Item *items) {
 	return new_room;
 }
 
-Room *connect_room(Room *room, Room *new_room, enum direction d) {
+/*
+ * function: connect_room
+ * --------------------------
+ * relates two rooms based on a passed cardinal direction;
+ * 		used primarily in hard-coded (OR JSON) game set-up
+ * ex:  connect_room(a, c, NORTH), connect_room(b, a, EAST), connect_room(a, d, UP)
+ 			results in the following psuedo-3D orientation:
+ *	    [d]<-[a][b]
+ * 		  	 [c]
+ * params:
+ *      *room  :  the
+ * 						 visual representation on the frontend
+ *		type          :  pointer to Room struct
+ *
+ *		*items  	  :  dynamically allocated list of items contained within the room
+ *		type          :  pointer to Item struct
+ *
+ * returns : pointer to the new struct
+ * type	   : (Room *)
+ */
+
+Room *connect_room(Room *room, Room *other_room, enum direction d) {
 	// if direction already set, can't change
-	if (room->connections[d] != NULL || new_room->connections[(d + 3) % 6] != NULL) {
+	if (room->connections[d] != NULL || other_room->connections[(d + 3) % 6] != NULL) {
 		return NULL;
 	}
-	room->connections[d] = new_room;
-	new_room->connections[(d+3) % 6] = room;
+	room->connections[d] = other_room;
+	other_room->connections[(d+3) % 6] = room;
 
 	return room;
 }
