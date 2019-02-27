@@ -2,12 +2,12 @@
 #include "rooms.h"
 
 /*
- * Struct: Avatar
+ * struct: avatar
  * ------------
- * models a playable character / sprite (ex: player)
+ * models a playable character / sprite in the game
  *
- * Functions: provide means of
- * 		interacting with the game environment and
+ * functions: provide means of
+ *      interacting with the game environment and
  *		modifying fields belonging to the avatar
  */
 
@@ -33,7 +33,7 @@ void add_to_inventory(Avatar *avatar, Item *item);
 //changes the room that the avatar is currently in
 int go_to_room(Avatar *avatar, enum direction dir);
 
-// inventory modifiers and interactive methods 
+// inventory modifiers and interactive methods
 int use(Avatar *avatar, char *object);
 
 int take(Avatar *avatar, char *object);

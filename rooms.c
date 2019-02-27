@@ -5,20 +5,22 @@
  * function: room
  * --------------------------
  * constructs a new Room struct given the passed specifications
- * 		acts as a container within the game state
+ *      acts as a container within the game state
  * params:
- *      *description  :  the room's identifier in the backend
- * 						 visual representation on the frontend
- *		type          :  pointer to Room struct
+ *      *name         :  the room's identifier in the backend
+ *		type          :  (char *) C string
  *
- *		*items  	  :  dynamically allocated list of items contained within the room
- *		type          :  pointer to Item struct
+ *      *description  :  textual (visual) representation in the frontend
+ *		type          :  (char *) C string
+ *
+ *		*items        :  dynamically allocated list of items contained within the room
+ *		type          :  (Item *) pointer to Item struct
  *
  * returns : pointer to the new struct
  * type	   : (Room *)
  */
 
-Room *room(char *description, Item *items) {
+Room *room(char *name, char *description, Item *items) {
 
 	Room *new_room = NULL;
 	new_room = (Room *) malloc(sizeof(Room));
@@ -27,7 +29,7 @@ Room *room(char *description, Item *items) {
 		printf("malloc failed\n");
 		exit(EXIT_FAILURE);
 	}
-
+	new_room->name = name;
 	new_room->description = description;
 	new_room->items = items;
 	return new_room;
@@ -37,18 +39,20 @@ Room *room(char *description, Item *items) {
  * function: connect_room
  * --------------------------
  * relates two rooms based on a passed cardinal direction;
- * 		used primarily in hard-coded (OR JSON) game set-up
+ *      used primarily in hard-coded (OR JSON) game setup
  * ex:  connect_room(a, c, NORTH), connect_room(b, a, EAST), connect_room(a, d, UP)
- 			results in the following psuedo-3D orientation:
+                        results in the following psuedo-3D orientation:
  *	    [d]<-[a][b]
- * 		  	 [c]
+ *           [c]
  * params:
- *      *room  :  the
- * 						 visual representation on the frontend
- *		type          :  pointer to Room struct
+ *      *room        :  room whose d connection is to be set
+ *		type         :  (Room *) pointer to Room struct
  *
- *		*items  	  :  dynamically allocated list of items contained within the room
- *		type          :  pointer to Item struct
+ *      *other_room  :  room whose opposite (d + 3) % 6 connection is to be set
+ *		type         :  (Room *) pointer to Room struct
+ *
+ *		*items       :  dynamically allocated list of items contained within the room
+ *		type         :  (Item *) pointer to Item struct
  *
  * returns : pointer to the new struct
  * type	   : (Room *)
@@ -60,15 +64,17 @@ Room *connect_room(Room *room, Room *other_room, enum direction d) {
 		return NULL;
 	}
 	room->connections[d] = other_room;
-	other_room->connections[(d+3) % 6] = room;
+	other_room->connections[(d + 3) % 6] = room;
 
 	return room;
 }
 
+// prints out all non-NULL connections of a given room
 void list_connections(Room *room) {
-
 	Room **cons = room->connections;
 	char *dirs[6] = {"north", "east", "up", "south", "west", "down"};
+
+	// using the (i + 3) % 6 expression, we can print out the directions "in order"
 	for (int i = 0; i < 3; ++i) {
 		if (cons[i] != NULL) {
 			printf("%s \n", dirs[i]);
@@ -80,7 +86,7 @@ void list_connections(Room *room) {
 }
 
 void print_room(Room *room) {
-	printf("%s \n", room->description);
+	printf("%s \n", room->name);
 
 	// iteration pointer initialization
 	Item *dummy_item = room->items;
@@ -91,5 +97,5 @@ void print_room(Room *room) {
 		dummy_item = dummy_item->next;
 	}
 	Room *roomcon = room->connections[0];
-	printf("%s \n", roomcon->description);
+	printf("%s \n", roomcon->name);
 }

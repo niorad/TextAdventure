@@ -58,8 +58,8 @@ void set_location(Avatar *avatar, Room* room){
  *      type     :  (Item *) pointer to Item struct
  *
  * adds the specified item to the avatar's inventory
- * 		to avoid using additional memory for a tail pointer, items
- * 		are added to the front of the list
+ *      to avoid using additional memory for a tail pointer, items
+ *      are added to the front of the list
  *
  * returns : void (no scenario exists when addition to linked list fails)
  */
@@ -80,22 +80,22 @@ void add_to_inventory(Avatar *avatar, Item *item) {
  *      type     :  enum direction
  *
  * given the passed directional, checks that the corresponding
- * 		room exists and relocates the sprite
+ *      room exists and relocates the sprite
  *
  * since the enum integer value doubles as the index of the corresponding
- * 		directional in the connections vector, relocation is an elegant and
+ *      directional in the connections vector, relocation is an elegant and
  *		seamless process
  * ex: {NORTH, EAST, UP, SOUTH, WEST, DOWN}
  *     {  0,     1,   2,   3,    4,    5  }
  *
  * connections = {room1, room2, NULL, NULL, NULL, room7}
- * 		represents a room with connections to the NORTH,
- * 		EAST, and DOWNWARDS directions
+ *      represents a room with connections to the NORTH,
+ *      EAST, and DOWNWARDS directions
  *
  * go_to_room(DOWN) = go_to_room(5), sets location to room7
  *
  * returns : -1 if the room doesn't exist (NULL)
- * 			  0 upon successful relocation
+ *            0 upon successful relocation
  * type	   : int
  */
 
@@ -113,15 +113,17 @@ int go_to_room(Avatar *avatar, enum direction dir) {
  * function: use
  * --------------------------
  * params:
- * 		*avatar  :  specified sprite in existing game state
+ *      *avatar  :  specified sprite in existing game state
  *      type     :  (Avatar *) pointer to Avatar struct
  *
  *		*object  :  name of object in avatar's inventory to be used
- *		type 	 :  (char *) C string
+ *		type     :  (char *) C string
  *
  * TODO : write the docs for this once implementation finalized
  *
- * returns  :
+ * returns  :  -1 if the item is not in the backpack OR
+ *                if the item is not useable in the current room
+ *              0 if the item is used successfully
  * type     :  int
  */
 
@@ -134,31 +136,31 @@ int use(Avatar *avatar, char *object) {
 		return -1;
 	}
 	// TODO : alter the room, change comparison from room description to room name?
-	if (strcmp(curr_room->description, to_use->use_room) == 0) {
+	if (strcmp(curr_room->name, to_use->use_room) == 0) {
 		printf("%s \n", to_use->use_description);
-		free_item(to_use);
-	} else {
-		add_item(&(avatar->backpack), to_use);
+		free_item(&to_use);
+		return 0;
 	}
-	return 0;
+	add_item(&(avatar->backpack), to_use);
+	return -1;
 }
 
 /*
  * function: take
  * --------------------------
  * params:
- * 		*avatar  :  specified sprite in existing game state
+ *      *avatar  :  specified sprite in existing game state
  *      type     :  (Avatar *) pointer to Avatar struct
  *
  *		*object  :  name of object to be taken
- *		type 	 :  (char *) C string
+ *		type     :  (char *) C string
  *
  * accesses the avatar's current location and searches the Room's items list
  *		for the specified object. If it exists, removes it from
- * 		the Room's items list and adds it to the player's inventory
+ *      the Room's items list and adds it to the player's inventory
  *
- * returns  :  -1 if the object is not found in the Room
- 				0 if the transfer is successful
+ * returns  :  -1 if the object is not found in the room's inventory
+ *              0 if the transfer is successful
  * type     :  int
  */
 
@@ -177,20 +179,20 @@ int take(Avatar *avatar, char *object) {
 
 /*
  * function: drop
- * --------------------------
+ * --------------
  * params:
- * 		*avatar  :  specified sprite in existing game state
+ *      *avatar  :  specified sprite in existing game state
  *      type     :  (Avatar *) pointer to Avatar struct
  *
  *		*object  :  name of object to be dropped
- *		type 	 :  (char *) C string
+ *		type     :  (char *) C string
  *
  * accesses the avatar's inventory and searches for the desired object. If it
- * 		exists, removes it frrom the backpack and adds it to the item list of
- * 		the avatar's current room
+ *      exists, removes it frrom the backpack and adds it to the item list of
+ *      the avatar's current room
  *
  * returns  :  -1 if the object is not found in the backpack
- 				0 if transfer is successful
+ *              0 if transfer is successful
  * type     :  int
  */
 

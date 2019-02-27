@@ -8,19 +8,21 @@
  *      *name             :  the name or identifier of the item
  *		type              :  (char *) C string
  *
- *		*use_room         :  TODO (what is this, naming not apparent)
+ *		*use_room         :  name of the room that the item can be used in
  *		type              :  (char *) C string
  *
  *		*use_description  :  action completed when the item is used
  *		type              :  (char *) C string
  *
- *		*next  			  :  next link in the item list (used to represent inventories)
+ *		*next             :  next link in the item list (used to represent inventories)
  *		type              :  (Item *) pointer to Item struct
  *
- * constructs a new Item struct, represented as a linked list node
+ * constructs a new Item struct, represented as a linked list node. Also,
+ *      assigns ]the Item an executable message (use_description) when used
+ *      in the corresponding room (use_room)
  *
  * returns : pointer to the new struct
- * type	   : (Avatar *)
+ * type	   : (Item *)
  */
 
 Item *useable_items(char *name, char *description, char *use_room, char *use_description, Item *next) {
@@ -38,6 +40,7 @@ Item *useable_items(char *name, char *description, char *use_room, char *use_des
 	new_item->use_room = use_room;
 	new_item->use_description = use_description;
 	new_item->next = next;
+
 	return new_item;
 }
 
@@ -47,10 +50,10 @@ Item *useable_items(char *name, char *description, char *use_room, char *use_des
  * psuedo-overloaded constructor
  *
  * same functionality as useable_items but creates an item that
- * 		does not directly interact with the game state
+ *      does not directly interact with the game state
  *
  * returns : pointer to the new struct
- * type	   : (Avatar *)
+ * type	   : (Item *)
  */
 
 // accessor methods
@@ -62,8 +65,13 @@ char *item_name(Item *item) {
 	return item->name;
 }
 
-char *item_description(Item *item) {
-	return item->description;
+int *item_description(Item *item) {
+	// item does not exist
+	if (item == NULL) {
+		return -1;
+	}
+	printf("%s", item->description);
+	return 0;
 }
 
 Item *item_next(Item *item) {
@@ -74,15 +82,15 @@ Item *item_next(Item *item) {
  * function: add_item
  * --------------------------
  * params:
- * 		**list   :  inventory or backpack to be augmented
- * 		type     :  (Item **) double pointer to Item struct
+ *      **list   :  inventory or backpack to be augmented
+ *      type     :  (Item **) double pointer to Item struct
  *
- * 		*to_add  :	Item to be added to the linked list
- * 		type     :  (Item *) pointer to Item struct
+ *      *to_add  :	Item to be added to the linked list
+ *      type     :  (Item *) pointer to Item struct
  *
  * front insertion, to_add becomes the head of the list,
- * 		regardless of whether it is empty or not. Saves memory
- * 		by eliminating need for a tail pointer
+ *      regardless of whether it is empty or not. Saves memory
+ *      by eliminating need for a tail pointer
  *
  * returns : void
  */
@@ -100,20 +108,18 @@ void add_item(Item **list, Item *to_add) {
  * function: remove_item
  * --------------------------
  * params:
- * 		**list   :  inventory or backpack to be reduced
- * 		type     :  (Item **) double pointer to Item struct
+ *      **list   :  inventory or backpack to be reduced
+ *      type     :  (Item **) double pointer to Item struct
  *
- * 		*object  :	name of Item to be added to the linked list
- * 		type     :  (char *) C string
+ *      *object  :	name of Item to be removed from the linked list
+ *      type     :  (char *) C string
  *
  * scans the list of Items, updating a staggered pointer (prev) while
- * 		checking if the struct pointed to by the iterated (dummy) pointer
- * 		contains the desired object
- *
- *
+ *      checking if the struct pointed to by the iterated (dummy) pointer
+ *      contains the desired object. If object is found, it is removed from the list
  *
  * returns : NULL if the inventory is empty or object is not found
- 			 ret_ptr (pointer to the Item removed)
+             ret_ptr (pointer to the Item being removed)
  */
 
 Item *remove_item(Item **list, char *object) {
@@ -123,10 +129,12 @@ Item *remove_item(Item **list, char *object) {
 	if (dummy == NULL) {
 		return NULL;
 	}
+
 	//if head has the target node
 	if (dummy != NULL && strcmp(dummy->name, object) == 0) {
 		ret_ptr = dummy;
 		*list = dummy->next;
+		dummy->next = NULL;
 		return ret_ptr;
 	}
 
@@ -137,19 +145,21 @@ Item *remove_item(Item **list, char *object) {
 		dummy = dummy->next;
 	}
 
-	// TODO stopped 2/27/19
+	// sets ret_ptr to the Item to be removed
 	ret_ptr = prev->next;
 
 	// object is not found
 	if (ret_ptr == NULL) {
 		return NULL;
 	}
+
+	// removal
 	prev->next = dummy->next;
-	// if object is not found, returns NULL
+	ret_ptr->next = NULL;
 	return ret_ptr;
 }
 
-// frees only one item, utilized in modifier methods (ex: use)
+// frees a single item from a list: utilized in modifier methods like use
 void free_item(Item **to_free) {
 	free(*to_free);
 	*to_free == NULL;
@@ -158,16 +168,21 @@ void free_item(Item **to_free) {
 // frees entire item list, to cleanup game state and return all memory to heap
 void free_items(Item **list) {
 	Item *dummy = *list;
+	// backwards recursion to iterate through list
 	if (dummy->next != NULL) {
 		free_items(&(dummy->next));
 	}
 	free_item(list);
 }
 
+// print method
 void list_items(Item **list) {
+	if (*list == NULL) {
+		printf("empty\n");
+	}
 	Item *dummy = *list;
 	while (dummy != NULL) {
-		printf("%s: %s\n", dummy->name, dummy->description);
+		printf("%s: \n", dummy->name);
 		dummy = dummy->next;
 	}
 }

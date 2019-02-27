@@ -1,27 +1,35 @@
 
 #include "items.h"
 
-enum direction {NORTH, EAST, UP,SOUTH, WEST, DOWN};
-
 /*
- * by having each cardinal direction be (n + 3 % 6) elements
- * away from one's opposite we can save space by using just one enum
+ * struct: room
+ * ------------
+ * models a room container in the game. Has the identifier name and a textual
+ *      representation description. Also has its own inventory that the player
+ *      can interact with as well as an array of adjacent rooms
  */
 
-// struct declaration
 typedef struct room {
+	char *name;
 	char *description;
 	Item *items;
 	struct room *connections[6];
 } Room;
 
+/*
+ * by having each cardinal direction be (n + 3) % 6 elements
+ * away from one's opposite (ex: DOWN, UP) we can save space by using just one enum
+ */
+
+enum direction {NORTH, EAST, UP, SOUTH, WEST, DOWN};
+
 // constructor
-Room *room(char* description, Item* items);
+Room *room(char *name, char *description, Item *items);
 
 // link rooms based on a passed direction
 Room *connect_room(Room *room, Room *other_room, enum direction d);
 
-// prints all available connections from a given room 
+// prints all available connections from a given room
 void list_connections(Room *room);
 
 // prints the room for debugging purposes
