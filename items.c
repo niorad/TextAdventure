@@ -162,12 +162,12 @@ void free_item(Item **to_free) {
 }
 
 // frees entire item list, to cleanup game state and return all memory to heap
-void free_items(Item **list) {
-	Item *dummy = *list;
-	// backwards recursion to iterate through list
-	if (dummy->next != NULL) {
-		free_items(&(dummy->next));
+void free_items(Item **list) {``
+	if (*list == NULL) {
+		return;
 	}
+	free_items(&((*list)->next));
+	// backwards recursion to iterate through list
 	free_item(list);
 }
 

@@ -100,13 +100,13 @@ int get_command(Avatar *avatar) {
 
 int init_game(Avatar **player) {
 
-	Item *cell_items = useable_items("cell key", "an old and rusty key; this looks like it could be useful", "prison cell", "the door of the cell creaks open, you're free!", PRISON_KEY,
+	Item *cell_items = useable_items("cell key", "an old and rusty key; this looks like it could be useful", "prison cell", "the door of the cell creaks open, you're free! The key breaks in the process", PRISON_KEY,
 	                                 items("crushed skull", "poor soul; what do you think happened to him?",
 	                                       items("jared yeager's sandal", "if only you could get out of here, this would sell for quite the penny", NULL)));
-    Item *sewer_items = useable_items("cruddy key", "submerged in a warm, viscous liquid. Your nose flares at the toxic odor but your curiosity is peaked", "vault_chamber", "", CRUDDY_KEY,
+    Item *sewer_items = useable_items("cruddy key", "submerged in a warm, viscous liquid. Your nose flares at the toxic odor but your curiosity is peaked", "vault chamber", "You open the vault door, revealing riches beyond your wildest imagination. Congratulations, you have won!", CRUDDY_KEY,
 									  items("nic herndon's water bottle", "gives you the taste of home",
 									  		items("radioactive rat", "their squeeks make you uneasy", NULL)));
-    Item *market_items = useable_items("ornate key", "seems fitting for something important...", "vault_chamber", "It was a ruse! The key disintegrates in your hand, the vault door collapses on you and you die a tragic death", ORNATE_KEY,
+    Item *market_items = useable_items("ornate key", "seems fitting for something important...", "vault chamber", "It was a ruse! The key disintegrates in your hand, the vault door collapses and you die a tragic death", ORNATE_KEY,
 									   useable_items("apple", "crisp and refreshing, nutritious and delicious, and you can't resist to take a bite", "anywhere", "you feel refreshed", USELESS, NULL));
 
 
@@ -118,12 +118,12 @@ int init_game(Avatar **player) {
 
 	Room *guards_barracks = room("guard's quarters", "what looks like the guard's old living quarters.", false, NULL);
 	Room *sewer_1 = room("courtyard sewer", "a wet and dirty sewer; why would you go in here?", false, NULL);
-	Room *sewer_2 = room("sewer walkway", "a darker part of the sewer, out of the corner of your eye you think you spot something.", false, NULL);
+	Room *sewer_2 = room("sewer walkway", "a darker part of the sewer, out of the corner of your eye you think you spot something.", false, sewer_items);
 	Room *sewer_3 = room("market sewer", "a long and unending corridor, you hear comotion above, better investigate.", false, NULL);
-	Room *market = room("marketplace", "a bustling marketplace filled with traders from all over the world. You're relieved that nobody saw your escape.", false, NULL);
+	Room *market = room("marketplace", "a bustling marketplace filled with traders from all over the world. You're relieved that nobody saw your escape.", false, market_items);
 	Room *bank = room("Herndon Bank", "a quiet and unasuming bank. The townspeople say that this is the most secure place to hold your money.", false, NULL);
-	Room *vault_chamber = room("vault chamber", "the chamber before the vault. The vault door is locked; I need a key", false, NULL);
-	Room *vault_interior = room("vaul interior", "the inside of the vault. You could have never dream of so much wealth in one place.", true, NULL);
+	Room *vault_chamber = room("vault chamber", "the chamber before the vault. The vault door is locked; you need a key", false, NULL);
+	Room *vault_interior = room("vault interior", "game ends here", true, NULL);
 
 	// prison_cell = connect_room(prison_cell, courtyard, NORTH); TODO set up key
 	prison_cell = connect_room(prison_cell, courtyard, NORTH);
@@ -167,8 +167,10 @@ int play_game() {
 		}
 		if (arg_num == CRUDDY_KEY) {
 			get_location(player)->connections[SOUTH]->locked = false;
+			game_over = true;
 		}
 	}
+	printf("\nGAME OVER\n");
 	free_avatar(&player);
 	return 0;
 }
