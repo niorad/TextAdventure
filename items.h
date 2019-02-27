@@ -26,8 +26,11 @@ Item *item_next(Item *item);
 
 // item list modifiers
 void add_item(Item **list, Item *to_add);
-
 Item *remove_item(Item **list, char *object);
+
+// free methods
+void free_item(Item **to_free);
+void free_items(Item **list);
 
 // printer methods
 void list_items(Item **list);

@@ -16,7 +16,7 @@ Room *room(char *description, Item *items) {
 	return new_room;
 }
 
-Room *add_room(Room *room, Room *new_room, enum direction d) {
+Room *connect_room(Room *room, Room *new_room, enum direction d) {
 	// if direction already set, can't change
 	if (room->connections[d] != NULL || new_room->connections[(d + 3) % 6] != NULL) {
 		return NULL;

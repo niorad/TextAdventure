@@ -44,7 +44,9 @@ void add_item(Item **list, Item *to_add) {
 
 Item *remove_item(Item **list, char *object) {
 	Item *dummy = *list, *prev = NULL, *ret_ptr = NULL;
-
+	if (dummy == NULL) {
+		return NULL;
+	}
 	//if head has the target node
 	if (dummy != NULL && strcmp(dummy->name, object) == 0) {
 		ret_ptr = dummy;
@@ -59,21 +61,28 @@ Item *remove_item(Item **list, char *object) {
 	}
 
 	ret_ptr = prev->next;
+
+	if (ret_ptr == NULL) {
+		return NULL;
+	}
 	prev->next = dummy->next;
 	// if object is not found, returns NULL
 	return ret_ptr;
 }
 
-void free_item(Item *to_free) {
-	free(to_free);
+// frees only one item, utilized in modifier methods (ex: use)
+void free_item(Item **to_free) {
+	free(*to_free);
+	*to_free == NULL;
 }
 
+// frees entire item list, to cleanup game state and return all memory to heap
 void free_items(Item **list) {
 	Item *dummy = *list;
 	if (dummy->next != NULL) {
 		free_items(&(dummy->next));
 	}
-	free_item(*list);
+	free_item(list);
 }
 
 void list_items(Item **list) {
