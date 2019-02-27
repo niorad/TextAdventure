@@ -101,12 +101,14 @@ int go_to_room(Avatar *avatar, enum direction dir) {
 int use(Avatar *avatar, char *object) {
 	Room *curr_room = get_location(avatar);
 	Item *to_use = remove_item(&(avatar->backpack), object);
+
 	if (to_use == NULL) {
 		return -1;
 	}
-	if (strcmp(curr_room->description, to_use->use_room)) {
+	// TODO : alter the room, change comparison from room description to room name?
+	if (strcmp(curr_room->description, to_use->use_room) == 0) {
 		printf("%s \n", to_use->use_description);
-		free(to_use);
+		free_item(&to_use);
 	} else {
 		add_item(&(avatar->backpack), to_use);
 	}

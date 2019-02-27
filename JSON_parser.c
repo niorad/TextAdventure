@@ -71,9 +71,6 @@ JSON_member *read_file(string file_path) {
         exit(0);
     }
 
-
-
-
     //iterates while there is still file to read
 
     //TODO: everything w/o a star

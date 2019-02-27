@@ -8,6 +8,7 @@ void get_command(Avatar *avatar) {
 	char input[30], command[5] = "", arg[25] = "";
 	Room *curr_room = get_location(avatar);
 	bool invalid_command = false;
+	int invalid_arg = 0;
 	// gets the command that the user entered
 	do {
 		invalid_command = false;
@@ -28,29 +29,33 @@ void get_command(Avatar *avatar) {
 			list_connections(curr_room);
 		} else if(strcmp(command, "go") == 0) {
 			if (strcmp(arg, "north")) {
-				go_to_room(avatar, NORTH);
+				invalid_arg = go_to_room(avatar, NORTH);
 			} else if (strcmp(arg, "south")) {
-				go_to_room(avatar, SOUTH);
+				invalid_arg = go_to_room(avatar, SOUTH);
 			} else if (strcmp(arg, "east")) {
-				go_to_room(avatar, EAST);
+				invalid_arg = go_to_room(avatar, EAST);
 			} else if (strcmp(arg, "west")) {
-				go_to_room(avatar, WEST);
+				invalid_arg = go_to_room(avatar, WEST);
 			} else if (strcmp(arg, "up")) {
-				go_to_room(avatar, UP);
+				invalid_arg = go_to_room(avatar, UP);
 			} else if (strcmp(arg, "down")) {
-				go_to_room(avatar, DOWN);
+				invalid_arg = go_to_room(avatar, DOWN);
 			}
 		} else if(strcmp(command, "take") == 0) {
-			take(avatar, arg);
+			invalid_arg = take(avatar, arg);
 		} else if (strcmp(command, "use") == 0) {
-			use(avatar, arg);
+			invalid_arg = use(avatar, arg);
 		} else if (strcmp(command, "drop") == 0) {
-			drop(avatar, arg);
+			invalid_arg = drop(avatar, arg);
 		} else {
 			invalid_command = true;
 			printf("Not a valid command, please try again: ");
 		}
-	} while(invalid_command);
+		// sanitizing user input
+		if (invalid_arg == -1){
+			printf("\"%s\" is an invalid argument to the command \"%s\" \n", arg, command);
+		}
+	} while(invalid_command || invalid_arg == -1);
 }
 
 // creates the game environment and all objects within it
@@ -59,7 +64,7 @@ int init_game(Avatar **player) {
 	Item *test_use =  useable_items("key", "debug", "test", "used", NULL);
 	Room *main_room = room("test", NULL);
 	Room *northen_room = room("northern", NULL);
-	main_room = add_room(main_room, northen_room, NORTH);
+	main_room = connect_room(main_room, northen_room, NORTH);
 	add_item(&(main_room->items), test_item);
 	add_item(&(main_room->items), test_use);
 	// list_connections(main_room);
@@ -78,13 +83,32 @@ int play_game() {
 	// initialize the game environment
 	// TODO: make the rooms
 	Room *main_room = get_location(player);
+	printf("room inventory: \n");
 	list_items(&(main_room->items));
-	get_command(player);
+	printf("player inventory: \n");
 	list_items(&(player->backpack));
+
 	get_command(player);
+
+	printf("room inventory: \n");
+	list_items(&(main_room->items));
+	printf("player inventory: \n");
 	list_items(&(player->backpack));
+
 	get_command(player);
+
+	printf("room inventory: \n");
+	list_items(&(main_room->items));
+	printf("player inventory: \n");
 	list_items(&(player->backpack));
+
+	get_command(player);
+
+	printf("room inventory: \n");
+	list_items(&(main_room->items));
+	printf("player inventory: \n");
+	list_items(&(player->backpack));
+	printf("\n");
 	return 0;
 }
 
