@@ -1,8 +1,6 @@
 
 #include "avatar.h"
 
-// #define PRINT_TEST(n) printf("test %i \n", n)
-
 // checks the user for what direction they want to go in
 void get_command(Avatar *avatar) {
 	char input[30], command[5] = "", arg[25] = "";
@@ -49,7 +47,7 @@ void get_command(Avatar *avatar) {
 			invalid_arg = drop(avatar, arg);
 		} else {
 			invalid_command = true;
-			printf("Not a valid command, please try again: ");
+			printf("Not a valid command, please try again or type h for HELP: "); // TODO add help for command reference manual
 		}
 		// sanitizing user input
 		if (invalid_arg == -1){
