@@ -21,7 +21,7 @@ Avatar *avatar(Room *location, Item *backpack) {
 	Avatar *new_avatar = NULL;
 	new_avatar = (Avatar *) malloc(sizeof(Avatar));
 
-	// check that dynamic allocation was completed successfully
+	// checks that dynamic allocation was completed successfully
 	if (new_avatar == NULL) {
 		printf("malloc failed\n");
 		exit(EXIT_FAILURE);
@@ -116,7 +116,7 @@ int go_to_room(Avatar *avatar, enum direction dir) {
  * 		*avatar  :  specified sprite in existing game state
  *      type     :  (Avatar *) pointer to Avatar struct
  *
- *		*object  :  object in avatar's inventory to be used
+ *		*object  :  name of object in avatar's inventory to be used
  *		type 	 :  (char *) C string
  *
  * TODO : write the docs for this once implementation finalized
@@ -150,7 +150,7 @@ int use(Avatar *avatar, char *object) {
  * 		*avatar  :  specified sprite in existing game state
  *      type     :  (Avatar *) pointer to Avatar struct
  *
- *		*object  :  object to be taken
+ *		*object  :  name of object to be taken
  *		type 	 :  (char *) C string
  *
  * accesses the avatar's current location and searches the Room's items list
@@ -182,7 +182,7 @@ int take(Avatar *avatar, char *object) {
  * 		*avatar  :  specified sprite in existing game state
  *      type     :  (Avatar *) pointer to Avatar struct
  *
- *		*object  :  object to be dropped
+ *		*object  :  name of object to be dropped
  *		type 	 :  (char *) C string
  *
  * accesses the avatar's inventory and searches for the desired object. If it
@@ -198,7 +198,7 @@ int drop(Avatar *avatar, char *object) {
 	Room *curr_room = get_location(avatar);
 	Item *to_drop = remove_item(&(avatar->backpack), object);
 
-	// checks that object is in avatar's backpack 
+	// checks that object is in avatar's backpack
 	if (to_drop == NULL) {
 		return -1;
 	}
