@@ -16,7 +16,7 @@ typedef struct room {
 Room *room(char* description, Item* items);
 
 // link rooms based on a passed direction
-Room *add_room(Room *room, Room *new_room, enum direction d);
+Room *connect_room(Room *room, Room *new_room, enum direction d);
 
 void list_connections(Room *room);
 
