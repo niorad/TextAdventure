@@ -10,7 +10,6 @@ void get_command(Avatar *avatar) {
 	Room *curr_room = get_location(avatar);
 	bool invalid_command = false;
 	// gets the command that the user entered
-
 	do {
 		invalid_command = false;
 		fgets(input, 30, stdin);
@@ -55,30 +54,35 @@ void get_command(Avatar *avatar) {
 	} while(invalid_command);
 }
 
-int play_game() {
-
-	bool game_over;
-
-	// while (!game_over) {
-	//
-	// }
-	// initialize the game environment
-	// TODO: make the rooms
-
+// creates the game environment and all objects within it
+int init_game(Avatar **player) {
 	Item *test_item = items("apple", "debugging", NULL);
 	Room *main_room = room("test", NULL);
 	Room *northen_room = room("northern", NULL);
 	main_room = add_room(main_room, northen_room, NORTH);
 	add_item(&(main_room->items), test_item);
-	list_connections(main_room);
-	Avatar *player = avatar(main_room, NULL);
-	list_items(&(main_room->items));
-	get_command(player);
-	list_items(&(player->backpack));
+	// list_connections(main_room);
+	*player = avatar(main_room, NULL);
 	return 0;
 }
 
-int main(void){
+int play_game() {
+	Avatar **player;
+	init_game(player);
+	bool game_over;
+	// printf
+	// while (!game_over) {
+	// 	get_command(player);
+	// }
+	// initialize the game environment
+	// TODO: make the rooms
+	// list_items(&(main_room->items));
+	get_command(*player);
+	// list_items(&(player->backpack));
+	return 0;
+}
+
+int main(void) {
 	play_game();
 	return 0;
 }
