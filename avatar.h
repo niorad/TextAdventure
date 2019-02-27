@@ -4,7 +4,7 @@
 /*
  * Struct: Avatar
  * ------------
- * models a sprite in the game (ex: player)
+ * models a playable character / sprite (ex: player)
  *
  * Functions: provide means of
  * 		interacting with the game environment and
@@ -19,21 +19,21 @@ typedef struct avatar {
 // constructor
 Avatar *avatar(Room *location, Item *backpack);
 
-// getters
+// getter methods
 Room *get_location(Avatar *avatar);
 
 Item *get_inventory(Avatar *avatar);
 
-// setters
+// setter methods
 void set_location(Avatar *avatar, Room *room);
 
 // adds an item to the backpack
 void add_to_inventory(Avatar *avatar, Item *item);
 
-//changes the room that the avatar currently is in
+//changes the room that the avatar is currently in
 int go_to_room(Avatar *avatar, enum direction dir);
 
-// inventory modifiers
+// inventory modifiers and interactive methods 
 int use(Avatar *avatar, char *object);
 
 int take(Avatar *avatar, char *object);
