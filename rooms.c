@@ -20,8 +20,7 @@
  * type	   : (Room *)
  */
 
-Room *room(char *name, char *description, Item *items) {
-
+Room *room(char *name, char *description, bool locked, Item *items) {
 	Room *new_room = NULL;
 	new_room = (Room *) malloc(sizeof(Room));
 
@@ -31,6 +30,7 @@ Room *room(char *name, char *description, Item *items) {
 	}
 	new_room->name = name;
 	new_room->description = description;
+	new_room->locked = locked;
 	new_room->items = items;
 	return new_room;
 }
@@ -73,15 +73,22 @@ Room *connect_room(Room *room, Room *other_room, enum direction d) {
 void list_connections(Room *room) {
 	Room **cons = room->connections;
 	char *dirs[6] = {"north", "east", "up", "south", "west", "down"};
+	int counter = 0;
 
 	// using the (i + 3) % 6 expression, we can print out the directions "in order"
 	for (int i = 0; i < 3; ++i) {
 		if (cons[i] != NULL) {
-			printf("%s \n", dirs[i]);
+			printf("%s %s\n", dirs[i], (cons[i]->locked ? "(locked)" : ""));
+			++counter;
 		}
 		if (cons[(i + 3) % 6] != NULL) {
-			printf("%s \n", dirs[i]);
+			printf("%s %s\n", dirs[(i + 3) % 6], (cons[(i + 3) % 6]->locked ? "(locked)" : ""));
+			++counter;
 		}
+	}
+
+	if (counter == 0) {
+		printf("you're trapped, find a way out!\n");
 	}
 }
 
@@ -98,4 +105,20 @@ void print_room(Room *room) {
 	}
 	Room *roomcon = room->connections[0];
 	printf("%s \n", roomcon->name);
+}
+
+void free_room(Room **to_free) {
+	free_items(&((*to_free)->items));
+	free(*to_free);
+	*to_free = NULL;
+}
+
+void free_rooms(Room **to_free, enum direction dirfrom) {
+	for (int i = 0; i < 6; ++i) {
+		if (i == dirfrom) continue;
+		if ((*to_free)->connections[i] != NULL) {
+			free_rooms(&((*to_free)->connections[i]), (i + 3) % 6);
+		}
+	}
+	free_room(to_free);
 }

@@ -16,6 +16,7 @@ typedef struct avatar {
 	Item *backpack;
 } Avatar;
 
+
 // constructor
 Avatar *avatar(Room *location, Item *backpack);
 
@@ -39,3 +40,7 @@ int use(Avatar *avatar, char *object);
 int take(Avatar *avatar, char *object);
 
 int drop(Avatar *avatar, char *object);
+
+void look(Avatar *avatar);
+
+void free_avatar(Avatar **to_free);

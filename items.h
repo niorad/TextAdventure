@@ -11,23 +11,26 @@
  *      to alter the state of the room that the player is currently in
  */
 
+enum item_enum {NONE = -1, USELESS, PRISON_KEY, ORNATE_KEY, CRUDDY_KEY};
+
 typedef struct item {
 	char *name;
 	char *description;
 	char *use_room;
 	char *use_description;
+	enum item_enum item_enum;
 	struct item *next;
 } Item;
 
 // constructors
-Item *useable_items(char* name, char* description, char *use_room, char *use_description, Item *next);
+Item *useable_items(char* name, char* description, char *use_room, char *use_description, enum item_enum item_enum, Item *next);
 
 Item *items(char* name, char* description, Item *next);
 
 // getter methods
 char *item_name(Item *item);
 
-int *item_description(Item *item);
+char *item_description(Item *item);
 
 Item *item_next(Item *item);
 

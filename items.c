@@ -25,7 +25,7 @@
  * type	   : (Item *)
  */
 
-Item *useable_items(char *name, char *description, char *use_room, char *use_description, Item *next) {
+Item *useable_items(char *name, char *description, char *use_room, char *use_description, enum item_enum item_enum, Item *next) {
 	Item *new_item = NULL;
 	new_item = (Item *) malloc(sizeof(Item));
 
@@ -39,6 +39,7 @@ Item *useable_items(char *name, char *description, char *use_room, char *use_des
 	new_item->description = description;
 	new_item->use_room = use_room;
 	new_item->use_description = use_description;
+	new_item->item_enum = item_enum;
 	new_item->next = next;
 
 	return new_item;
@@ -58,20 +59,15 @@ Item *useable_items(char *name, char *description, char *use_room, char *use_des
 
 // accessor methods
 Item *items(char *name, char *description, Item *next) {
-	return useable_items(name, description, "", "", next);
+	return useable_items(name, description, "", "", NONE, next);
 }
 
 char *item_name(Item *item) {
 	return item->name;
 }
 
-int *item_description(Item *item) {
-	// item does not exist
-	if (item == NULL) {
-		return -1;
-	}
-	printf("%s", item->description);
-	return 0;
+char *item_description(Item *item) {
+	return item->description;
 }
 
 Item *item_next(Item *item) {
@@ -178,11 +174,11 @@ void free_items(Item **list) {
 // print method
 void list_items(Item **list) {
 	if (*list == NULL) {
-		printf("empty\n");
+		printf("->nothing\n");
 	}
 	Item *dummy = *list;
 	while (dummy != NULL) {
-		printf("%s: \n", dummy->name);
+		printf("->%s, %s \n", dummy->name, dummy->description);
 		dummy = dummy->next;
 	}
 }

@@ -100,10 +100,13 @@ void add_to_inventory(Avatar *avatar, Item *item) {
  */
 
 int go_to_room(Avatar *avatar, enum direction dir) {
-
 	Room *room = get_location(avatar);
 	if (room->connections[dir] == NULL) {
 		return -1;
+	}
+	if (room->connections[dir]->locked) {
+		printf("the door to the %s is locked\n\n", room->connections[dir]->name);
+		return 0;
 	}
 	set_location(avatar, room->connections[dir]);
 	return 0;
@@ -136,10 +139,11 @@ int use(Avatar *avatar, char *object) {
 		return -1;
 	}
 	// TODO : alter the room, change comparison from room description to room name?
-	if (strcmp(curr_room->name, to_use->use_room) == 0) {
+	if (strcmp(curr_room->name, to_use->use_room) == 0 || to_use->item_enum == USELESS) {
 		printf("%s \n", to_use->use_description);
+		int ret = to_use->item_enum;
 		free_item(&to_use);
-		return 0;
+		return ret;
 	}
 	add_item(&(avatar->backpack), to_use);
 	return -1;
@@ -206,4 +210,24 @@ int drop(Avatar *avatar, char *object) {
 	}
 	add_item(&(curr_room->items), to_drop);
 	return 0;
+}
+
+// TODO DOCS
+
+void look(Avatar *avatar) {
+	Room *curr_room = get_location(avatar);
+	printf("you look around and find yourself in ");
+	printf("%s\n", curr_room->description);
+	printf("\nafter some searching, you discover \n");
+	list_items(&(curr_room->items));
+	printf("\nyou can go: \n");
+	list_connections(curr_room);
+	printf("\n");
+}
+
+void free_avatar(Avatar **to_free) {
+	free_rooms(&((*to_free)->location), NODIR);
+	free_items(&((*to_free)->backpack));
+	free(*to_free);
+	*to_free = NULL;
 }
