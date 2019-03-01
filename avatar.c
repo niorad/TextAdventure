@@ -141,7 +141,7 @@ int go_to_room(Avatar *avatar, enum direction dir) {
  * if unsuccessful, the item is placed back into the backpack as if nothing happened
  *
  * returns  :  INVALID (-1) if the item is not in the backpack, incompatible with curr_room, or not of type USELESS
- *             "type" the enum value cooresponding to the use case, non-negative values so that the do-while loop in
+ *             "type" the enum value cooresponding to the use case, positive values so that the do-while loop in
  *			   		adventure.c terminates
  *			   EDGE CASE: ret is NONE (-1), if an item were accidentally initialized as not of useable "type"
  *					error would get caught in this method
@@ -158,10 +158,10 @@ int use(Avatar *avatar, char *object) {
 	}
 
 	// checks that the item can be used in the curr_room or if it doesn't have a designated use case
-	if (strcmp(curr_room->name, to_use->use_room) == 0 || to_use->action_type == USELESS) {
+	if (strcmp(curr_room->name, to_use->use_room) == 0 || to_use->action == USELESS) {
 		printf("%s \n", to_use->use_description);
 		// type is the termination condition for the do-while loop
-		int type = to_use->action_type;
+		int type = to_use->action;
 		free_item(&to_use);
 		return type;
 	}

@@ -13,19 +13,19 @@
  */
 
 // enumerates the useable items in the implementation of this game
-enum use_cases {NONE = -1, USELESS, PRISON_KEY, ORNATE_KEY, CRUDDY_KEY};
+enum effect {NONE = -1, USELESS, PRISON_KEY, ORNATE_KEY, CRUDDY_KEY};
 
 typedef struct item {
 	char *name;
 	char *description;
 	char *use_room;
 	char *use_description;
-	enum use_cases action_type;
+	enum effect action;
 	struct item *next;
 } Item;
 
 // constructors
-Item *useable_items(char* name, char* description, char *use_room, char *use_description, enum use_cases action_type, Item *next);
+Item *useable_items(char* name, char* description, char *use_room, char *use_description, enum effect action, Item *next);
 
 Item *items(char* name, char* description, Item *next);
 

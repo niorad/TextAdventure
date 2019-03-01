@@ -2,7 +2,7 @@
 #include "avatar.h"
 #include <ctype.h>
 
-#define BUFFER_SIZE 500
+#define BUFFER_SIZE 200
 
 /*
  * function: get_command
@@ -13,25 +13,22 @@
  *
  * takes the user's input and calls the associated functions
  *
- * example  : user inputs: "use key"; get_command calls "use(avatar, "key")"
+ * example: user inputs "use key", get_command calls "use(avatar, "key")"
  *
- * returns : 0
- *			 -1
- *			  (enum item_enum)
- *            USELESS
- *            PRISON_KEY
- *            ORNATE_KEY
- *            CRUDDY_KEY
- * type   :  int
+ * returns :  0 or positive effect enum values if successful
+ *			  -1 if input or command is not valid
+ *
+ * type  :  int
  */
 
 int get_command(Avatar *avatar) {
 	char *command_list = "\
 	\nCommand          | Description \
+	\nhelp             | this \
 	\nlook             | gives you a description of the room you are in \
 	\ngo \"direction\"   | moves your player to the room in \"direction\" \
 	\ntake \"item\"      | adds \"item\" into the your inventory if \"item\" is in the current room \
-	\nuse \"item\"       | uses \"item\" to alter the game state or consume the \"item\" \
+	\nuse \"item\"       | uses \"item\" to alter the game state or consume \"item\" \
 	\ndrop \"item\"      | removes \"item\" from the your inventory and puts it in the current room \
 	\ninventory        | displays your current inventory\n"    ;
 
@@ -43,6 +40,10 @@ int get_command(Avatar *avatar) {
 	// gets the command that the user entered
 	do {
 		invalid_command = false;
+		// reset the buffer
+		input[0] = '\0';
+		command[0] = '\0';
+		arg[0] = '\0';
 		printf("what do you do: ");
 		fgets(input, BUFFER_SIZE, stdin);
 		// puts the input into lower-case so user can input either.
@@ -90,11 +91,11 @@ int get_command(Avatar *avatar) {
 			printf("\nyour inventory: \n");
 			list_items(&(avatar->backpack));
 			printf("\n");
-		} else if (strcmp(command, "h") == 0) {
-			printf("%s \n", command_list);
+		} else if (strcmp(command, "help") == 0) {
+				printf("%s \n", command_list);
 		} else {
 			invalid_command = true;
-			printf("Not a valid command, please try again or type h for HELP: ");
+			printf("Not a valid command, please try again or type 'help' for instructions : \n");
 		}
 		// sanitizing user input
 		if (arg_num == INVALID) {
@@ -135,7 +136,7 @@ int init_game(Avatar **player) {
 	Room *sewer_1 = room("courtyard sewer", "a wet and dirty sewer; why would you go in here?", false, NULL);
 	Room *sewer_2 = room("sewer walkway", "a darker part of the sewer, out of the corner of your eye you think you spot something.", false, sewer_items);
 	Room *sewer_3 = room("market sewer", "a long and unending corridor, you hear comotion above, better investigate.", false, NULL);
-	Room *market = room("marketplace", "a bustling marketplace filled with traders from all over the world. You're relieved that nobody saw your escape.", false, market_items);
+	Room *market = room("marketplace", "a bustling marketplace filled with traders from all over the world. You're relieved that nobody saw you escape.", false, market_items);
 	Room *bank = room("Herndon Bank", "a quiet and unasuming bank. The townspeople say that this is the most secure place to hold your money.", false, NULL);
 	Room *vault_chamber = room("vault chamber", "the chamber before the vault. The vault door is locked; you need a key", false, NULL);
 	Room *vault_interior = room("vault interior", "game ends here", true, NULL);

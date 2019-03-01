@@ -172,8 +172,8 @@ void free_rooms(Room **to_free, enum direction dirfrom) {
 		// if already checked continue loop
 		if (i == dirfrom) continue;
 
-		// if adjacent room exists, recursive call to free all of its connections 
-		if ((*to_free)->connections[i] != NULL)
+		// if adjacent room exists, recursive call to free all of its connections
+		if ((*to_free)->connections[i] != NULL) {
 			free_rooms(&((*to_free)->connections[i]), (i + 3) % 6);
 		}
 	}

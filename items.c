@@ -17,22 +17,22 @@
  *		*use_description  :  action completed when the item is used
  *		type              :  (char *) C string
  *
- *		action_type       :  use case corresponding to the item
- *		type              :  enum use_cases
+ *		action            :  use case corresponding to the item
+ *		type              :  enum effect
  *
  *		*next             :  next link in the item list (used to represent inventories)
  *		type              :  (Item *) pointer to Item struct
  *
  * constructs a new Item struct, represented as a linked list node. Also,
  *      assigns the Item an executable message (use_description) when used
- *      in the corresponding room (use_room). Action_type is a number that
+ *      in the corresponding room (use_room). action is a number that
  * 		relates to the appropriate function to be executed upon the use of this item
  *
  * returns : pointer to the new struct
  * type	   : (Item *)
  */
 
-Item *useable_items(char *name, char *description, char *use_room, char *use_description, enum use_cases action_type, Item *next) {
+Item *useable_items(char *name, char *description, char *use_room, char *use_description, enum effect action, Item *next) {
 	Item *new_item = NULL;
 	new_item = (Item *) malloc(sizeof(Item));
 
@@ -47,7 +47,7 @@ Item *useable_items(char *name, char *description, char *use_room, char *use_des
 	new_item->description = description;
 	new_item->use_room = use_room;
 	new_item->use_description = use_description;
-	new_item->action_type = action_type;
+	new_item->action = action;
 	new_item->next = next;
 
 	return new_item;
@@ -68,7 +68,7 @@ Item *useable_items(char *name, char *description, char *use_room, char *use_des
  *		type              :  (Item *) pointer to Item struct
  *
  * same functionality as useable_items but creates an item that
- *      does not directly interact with the game state (NONE action_type)
+ *      does not directly interact with the game state (action == NONE)
  *
  * returns : pointer to the new struct
  * type	   : (Item *)
