@@ -1,6 +1,6 @@
 
 #include "items.h"
-
+#define LOCKED_ROOM -2
 /*
  * struct: room
  * ------------

@@ -26,6 +26,15 @@
  */
 
 int get_command(Avatar *avatar) {
+	char *command_list = "\
+	\nCommand          | Description \
+	\nlook             | gives you a description of the room you are in \
+	\ngo \"direction\"   | moves your player to the room in \"direction\" \
+	\ntake \"item\"      | adds \"item\" into the your inventory if \"item\" is in the current room \
+	\nuse \"item\"       | uses \"item\" to alter the game state or consume the \"item\" \
+	\ndrop \"item\"      | removes \"item\" from the your inventory and puts it in the current room \
+	\ninventory        | displays your current inventory\n"    ;
+
 	char input[BUFFER_SIZE], command[BUFFER_SIZE / 5] = "", arg[4 * BUFFER_SIZE / 5] = "";
 	Room *curr_room = get_location(avatar);
 	bool invalid_command = false;
@@ -56,9 +65,9 @@ int get_command(Avatar *avatar) {
 			look(avatar);
 		} else if(strcmp(command, "go") == 0) {
 			// reads for which arg the user has entered for the command "go"
+			arg_num = INVALID;
 			if (strcmp(arg, "north") == 0) {
 				arg_num = go_to_room(avatar, NORTH);
-				// if (arg_num != -1) look(avatar);
 			} else if (strcmp(arg, "south") == 0) {
 				arg_num = go_to_room(avatar, SOUTH);
 			} else if (strcmp(arg, "east") == 0) {
@@ -70,6 +79,7 @@ int get_command(Avatar *avatar) {
 			} else if (strcmp(arg, "down") == 0) {
 				arg_num = go_to_room(avatar, DOWN);
 			}
+			if (arg_num != INVALID && arg_num != LOCKED_ROOM) look(avatar);
 		} else if(strcmp(command, "take") == 0) {
 			arg_num = take(avatar, arg);
 		} else if (strcmp(command, "use") == 0) {
@@ -80,15 +90,17 @@ int get_command(Avatar *avatar) {
 			printf("\nyour inventory: \n");
 			list_items(&(avatar->backpack));
 			printf("\n");
+		} else if (strcmp(command, "h") == 0) {
+			printf("%s \n", command_list);
 		} else {
 			invalid_command = true;
-			printf("Not a valid command, please try again or type h for HELP: ");                                                                                                                                                                                                                                                                                                                                                                                                             // TODO add help for command reference manual
+			printf("Not a valid command, please try again or type h for HELP: ");
 		}
 		// sanitizing user input
-		if (arg_num == -1) {
+		if (arg_num == INVALID) {
 			printf("\"%s\" is an invalid argument to the command \"%s\" \n", arg, command);
 		}
-	} while(invalid_command || arg_num == -1);
+	} while(invalid_command || arg_num == INVALID);
 	return arg_num;
 }
 
@@ -116,13 +128,9 @@ int init_game(Avatar **player) {
 	Item *market_items = useable_items("ornate key", "seems fitting for something important...", "vault chamber", "It was a ruse! The key disintegrates in your hand, the vault door collapses and you die a tragic death", ORNATE_KEY,
 	                                   useable_items("apple", "crisp and refreshing, nutritious and delicious, and you can't resist to take a bite", "anywhere", "you feel refreshed", USELESS, NULL));
 
-
 	Room *prison_cell = room("prison cell", "a dark, disagreeably damp, musty, and cold prison cell. You need to find a way out.", false, cell_items);
 
-	// Item *courtyard_items =;
 	Room *courtyard = room("courtyard", "the outside of the cell, you don't know this place; better find a way out.", true, NULL);
-
-
 	Room *guards_barracks = room("guard's quarters", "what looks like the guard's old living quarters.", false, NULL);
 	Room *sewer_1 = room("courtyard sewer", "a wet and dirty sewer; why would you go in here?", false, NULL);
 	Room *sewer_2 = room("sewer walkway", "a darker part of the sewer, out of the corner of your eye you think you spot something.", false, sewer_items);
@@ -132,7 +140,6 @@ int init_game(Avatar **player) {
 	Room *vault_chamber = room("vault chamber", "the chamber before the vault. The vault door is locked; you need a key", false, NULL);
 	Room *vault_interior = room("vault interior", "game ends here", true, NULL);
 
-	// prison_cell = connect_room(prison_cell, courtyard, NORTH); TODO set up key
 	prison_cell = connect_room(prison_cell, courtyard, NORTH);
 	courtyard = connect_room(courtyard, guards_barracks, EAST);
 	courtyard = connect_room(courtyard, sewer_1, DOWN);

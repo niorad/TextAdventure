@@ -35,7 +35,7 @@ Avatar *avatar(Room *location, Item *backpack) {
 }
 
 // accessor methods
-Item *get_inventory(Avatar *avatar) {
+Item *get_backpack(Avatar *avatar) {
 	return avatar->backpack;
 }
 
@@ -48,7 +48,7 @@ void set_location(Avatar *avatar, Room* room){
 }
 
 /*
- * function: add_to_inventory
+ * function: add_to_backpack
  * --------------------------
  * params:
  *      *avatar  :  specified sprite in existing game state
@@ -64,7 +64,7 @@ void set_location(Avatar *avatar, Room* room){
  * returns : void (no scenario exists when addition to linked list fails)
  */
 
-void add_to_inventory(Avatar *avatar, Item *item) {
+void add_to_backpack(Avatar *avatar, Item *item) {
 	item->next = avatar->backpack;
 	avatar->backpack = item;
 }
@@ -94,19 +94,20 @@ void add_to_inventory(Avatar *avatar, Item *item) {
  *
  * go_to_room(DOWN) = go_to_room(5), sets location to room7
  *
- * returns : -1 if the room doesn't exist (NULL)
- *            0 upon successful relocation
+ * returns : INVALID if the room doesn't exist (NULL)
+ *			 LOCKED_ROOM if the room is locked
+ *           0 upon successful relocation
  * type	   : int
  */
 
 int go_to_room(Avatar *avatar, enum direction dir) {
 	Room *room = get_location(avatar);
 	if (room->connections[dir] == NULL) {
-		return -1;
+		return INVALID;
 	}
 	if (room->connections[dir]->locked) {
 		printf("the door to the %s is locked\n\n", room->connections[dir]->name);
-		return 0;
+		return LOCKED_ROOM;
 	}
 	set_location(avatar, room->connections[dir]);
 	return 0;
@@ -124,9 +125,9 @@ int go_to_room(Avatar *avatar, enum direction dir) {
  *
  * TODO : write the docs for this once implementation finalized
  *
- * returns  :  -1 if the item is not in the backpack OR
- *                if the item is not useable in the current room
- *              0 if the item is used successfully
+ * returns  :  INVALID if the item is not in the backpack OR
+ *               if the item is not useable in the current room
+ *             "ret" if the item is used successfully
  * type     :  int
  */
 
@@ -136,7 +137,7 @@ int use(Avatar *avatar, char *object) {
 
 	// checks that object is in avatar's backpack
 	if (to_use == NULL) {
-		return -1;
+		return INVALID;
 	}
 	// TODO : alter the room, change comparison from room description to room name?
 	if (strcmp(curr_room->name, to_use->use_room) == 0 || to_use->item_enum == USELESS) {
@@ -146,7 +147,7 @@ int use(Avatar *avatar, char *object) {
 		return ret;
 	}
 	add_item(&(avatar->backpack), to_use);
-	return -1;
+	return INVALID;
 }
 
 /*
@@ -195,9 +196,9 @@ int take(Avatar *avatar, char *object) {
  *      exists, removes it frrom the backpack and adds it to the item list of
  *      the avatar's current room
  *
- * returns  :  -1 if the object is not found in the backpack
- *              0 if transfer is successful
- * type     :  int
+ * returns : INVALID if the object is not found in the backpack
+ *           0 if transfer is successful
+ * type    : int
  */
 
 int drop(Avatar *avatar, char *object) {
@@ -206,7 +207,7 @@ int drop(Avatar *avatar, char *object) {
 
 	// checks that object is in avatar's backpack
 	if (to_drop == NULL) {
-		return -1;
+		return INVALID;
 	}
 	add_item(&(curr_room->items), to_drop);
 	return 0;
