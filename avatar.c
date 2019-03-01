@@ -212,7 +212,18 @@ int drop(Avatar *avatar, char *object) {
 	return 0;
 }
 
-// TODO DOCS
+/*
+ * function: look
+ * --------------
+ * params:
+ *      *avatar  :  specified sprite in existing game state
+ *      type     :  (Avatar *) pointer to Avatar struct
+ *
+ * accesses the avatar's current location, prints out the description of room,
+ *      all the items in it, and all the possible connections.
+ *
+ * returns  :  void
+ */
 
 void look(Avatar *avatar) {
 	Room *curr_room = get_location(avatar);
@@ -224,6 +235,22 @@ void look(Avatar *avatar) {
 	list_connections(curr_room);
 	printf("\n");
 }
+
+/*
+ * function: free_avatar
+ * ---------------------
+ * params:
+ *      **to_free  :  specified sprite in existing game state
+ *      type       :  (Avatar **) pointer to a pointer Avatar struct
+ *
+ * frees the memory used by:
+ *		A) the avatar
+        B) the items in the avatar's backpack (free_items)
+                C) all the rooms that the avatar is in and their connections (free_rooms)
+                and points the avatar's pointer to NULL
+ *
+ * returns  :  void
+ */
 
 void free_avatar(Avatar **to_free) {
 	free_rooms(&((*to_free)->location), NODIR);

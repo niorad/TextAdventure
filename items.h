@@ -39,10 +39,10 @@ void add_item(Item **list, Item *to_add);
 
 Item *remove_item(Item **list, char *object);
 
+// printer methods
+void list_items(Item **list);
+
 // free methods
 void free_item(Item **to_free);
 
 void free_items(Item **list);
-
-// printer methods
-void list_items(Item **list);

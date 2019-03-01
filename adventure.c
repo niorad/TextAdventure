@@ -15,7 +15,14 @@
  *
  * example  : user inputs: "use key"; get_command calls "use(avatar, "key")"
  *
- * returns  :  void
+ * returns : 0
+ *			 -1
+ *			  (enum item_enum)
+ *            USELESS
+ *            PRISON_KEY
+ *            ORNATE_KEY
+ *            CRUDDY_KEY
+ * type   :  int
  */
 
 int get_command(Avatar *avatar) {
@@ -75,7 +82,7 @@ int get_command(Avatar *avatar) {
 			printf("\n");
 		} else {
 			invalid_command = true;
-			printf("Not a valid command, please try again or type h for HELP: ");                                                                                                                                                                                                                                                                                                                                                             // TODO add help for command reference manual
+			printf("Not a valid command, please try again or type h for HELP: ");                                                                                                                                                                                                                                                                                                                                                                                                             // TODO add help for command reference manual
 		}
 		// sanitizing user input
 		if (arg_num == -1) {
@@ -94,8 +101,8 @@ int get_command(Avatar *avatar) {
  *
  * creates the game environment and all objects within it
  *
- * returns  :
- * type     :  int
+ * returns : 0
+ * type    : int
  */
 
 int init_game(Avatar **player) {
@@ -103,11 +110,11 @@ int init_game(Avatar **player) {
 	Item *cell_items = useable_items("cell key", "an old and rusty key; this looks like it could be useful", "prison cell", "the door of the cell creaks open, you're free! The key breaks in the process", PRISON_KEY,
 	                                 items("crushed skull", "poor soul; what do you think happened to him?",
 	                                       items("jared yeager's sandal", "if only you could get out of here, this would sell for quite the penny", NULL)));
-    Item *sewer_items = useable_items("cruddy key", "submerged in a warm, viscous liquid. Your nose flares at the toxic odor but your curiosity is peaked", "vault chamber", "You open the vault door, revealing riches beyond your wildest imagination. Congratulations, you have won!", CRUDDY_KEY,
-									  items("nic herndon's water bottle", "gives you the taste of home",
-									  		items("radioactive rat", "their squeeks make you uneasy", NULL)));
-    Item *market_items = useable_items("ornate key", "seems fitting for something important...", "vault chamber", "It was a ruse! The key disintegrates in your hand, the vault door collapses and you die a tragic death", ORNATE_KEY,
-									   useable_items("apple", "crisp and refreshing, nutritious and delicious, and you can't resist to take a bite", "anywhere", "you feel refreshed", USELESS, NULL));
+	Item *sewer_items = useable_items("cruddy key", "submerged in a warm, viscous liquid. Your nose flares at the toxic odor but your curiosity is peaked", "vault chamber", "You open the vault door, revealing riches beyond your wildest imagination. Congratulations, you have won!", CRUDDY_KEY,
+	                                  items("nic herndon's water bottle", "gives you the taste of home",
+	                                        items("radioactive rat", "their squeeks make you uneasy", NULL)));
+	Item *market_items = useable_items("ornate key", "seems fitting for something important...", "vault chamber", "It was a ruse! The key disintegrates in your hand, the vault door collapses and you die a tragic death", ORNATE_KEY,
+	                                   useable_items("apple", "crisp and refreshing, nutritious and delicious, and you can't resist to take a bite", "anywhere", "you feel refreshed", USELESS, NULL));
 
 
 	Room *prison_cell = room("prison cell", "a dark, disagreeably damp, musty, and cold prison cell. You need to find a way out.", false, cell_items);
@@ -145,8 +152,8 @@ int init_game(Avatar **player) {
  * calls init_game to initialize all game objects then runs through the game
  *      by continuously calling get_command
  *
- * returns  :
- * type     :  int
+ * returns : 0
+ * type    : int
  */
 
 int play_game() {
@@ -156,7 +163,7 @@ int play_game() {
 	int arg_num;
 	look(player);
 	while (!game_over) {
-	 	arg_num = get_command(player);
+		arg_num = get_command(player);
 		if (arg_num == PRISON_KEY) {
 			get_location(player)->connections[NORTH]->locked = false;
 			printf("\nyou can go: \n");
@@ -180,8 +187,8 @@ int play_game() {
  * --------------
  * calls play_game
  *
- * returns  :
- * type     :  int
+ * returns : 0
+ * type    : int
  */
 
 int main(void) {

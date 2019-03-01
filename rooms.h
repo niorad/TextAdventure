@@ -25,7 +25,6 @@ typedef struct room {
 enum direction {NORTH, EAST, UP, SOUTH, WEST, DOWN, NODIR};
 
 // constructor
-
 Room *room(char *name, char *description, bool locked, Item *items);
 
 // link rooms based on a passed direction
@@ -35,7 +34,7 @@ Room *connect_room(Room *room, Room *other_room, enum direction d);
 void list_connections(Room *room);
 
 // prints the room for debugging purposes
-void print_room(Room *room);
+// void print_room(Room *room);
 
 void free_room(Room **to_free);
 

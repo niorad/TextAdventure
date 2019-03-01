@@ -8,6 +8,9 @@
  *      *name             :  the name or identifier of the item
  *		type              :  (char *) C string
  *
+ *		*description      :  the description of the item
+ *		type              :  (char *) C string
+ *
  *		*use_room         :  name of the room that the item can be used in
  *		type              :  (char *) C string
  *
@@ -18,7 +21,7 @@
  *		type              :  (Item *) pointer to Item struct
  *
  * constructs a new Item struct, represented as a linked list node. Also,
- *      assigns ]the Item an executable message (use_description) when used
+ *      assigns the Item an executable message (use_description) when used
  *      in the corresponding room (use_room)
  *
  * returns : pointer to the new struct
@@ -49,6 +52,15 @@ Item *useable_items(char *name, char *description, char *use_room, char *use_des
  * function: items
  * --------------------------
  * psuedo-overloaded constructor
+ * params:
+ *      *name             :  the name or identifier of the item
+ *		type              :  (char *) C string
+ *
+ *		*description      :  the description of the item
+ *		type              :  (char *) C string
+ *
+ *		*next             :  next link in the item list (used to represent inventories)
+ *		type              :  (Item *) pointer to Item struct
  *
  * same functionality as useable_items but creates an item that
  *      does not directly interact with the game state
@@ -57,11 +69,11 @@ Item *useable_items(char *name, char *description, char *use_room, char *use_des
  * type	   : (Item *)
  */
 
-// accessor methods
 Item *items(char *name, char *description, Item *next) {
 	return useable_items(name, description, "", "", NONE, next);
 }
 
+// accessor methods
 char *item_name(Item *item) {
 	return item->name;
 }
@@ -115,7 +127,7 @@ void add_item(Item **list, Item *to_add) {
  *      contains the desired object. If object is found, it is removed from the list
  *
  * returns : NULL if the inventory is empty or object is not found
-             ret_ptr (pointer to the Item being removed)
+ *             ret_ptr (pointer to the Item being removed)
  */
 
 Item *remove_item(Item **list, char *object) {
@@ -155,23 +167,18 @@ Item *remove_item(Item **list, char *object) {
 	return ret_ptr;
 }
 
-// frees a single item from a list: utilized in modifier methods like use
-void free_item(Item **to_free) {
-	free(*to_free);
-	*to_free == NULL;
-}
+/*
+ * function: list_items
+ * --------------------
+ * params:
+ *      **list           :  head of the list of items to be listed
+ *		type             :  (Item **) pointer to a pointer of an Item struct
+ *
+ * prints out all items' names in **list and their descriptions
+ *
+ * returns : void
+ */
 
-// frees entire item list, to cleanup game state and return all memory to heap
-void free_items(Item **list) {``
-	if (*list == NULL) {
-		return;
-	}
-	free_items(&((*list)->next));
-	// backwards recursion to iterate through list
-	free_item(list);
-}
-
-// print method
 void list_items(Item **list) {
 	if (*list == NULL) {
 		printf("->nothing\n");
@@ -181,4 +188,42 @@ void list_items(Item **list) {
 		printf("->%s, %s \n", dummy->name, dummy->description);
 		dummy = dummy->next;
 	}
+}
+
+/*
+ * function: free_item
+ * -------------------
+ * params:
+ *      **to_free        :  item to be freed
+ *		type             :  (Item **) pointer to a pointer of an Item struct
+ *
+ * frees the item then sets its pointer to NULL
+ *
+ * returns : void
+ */
+
+void free_item(Item **to_free) {
+	free(*to_free);
+	*to_free == NULL;
+}
+
+/*
+ * function: free_items
+ * --------------------
+ * params:
+ *      **list           :  head of the list of items to be freed
+ *		type             :  (Item **) pointer to a pointer of an Item struct
+ *
+ * recursively calls itself to free the whole list using calls free_item
+ *
+ * returns : void
+ */
+
+void free_items(Item **list) {
+	if (*list == NULL) {
+		return;
+	}
+	// backwards recursion to iterate through list
+	free_items(&((*list)->next));
+	free_item(list);
 }
