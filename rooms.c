@@ -105,21 +105,6 @@ void list_connections(Room *room) {
 	}
 }
 
-// void print_room(Room *room) {
-//  printf("%s \n", room->name);
-//
-//  // iteration pointer initialization
-//  Item *dummy_item = room->items;
-//
-//  printf("inventory: \n");
-//  while (dummy_item != NULL) {
-//      printf("%s \n", dummy_item->name);
-//      dummy_item = dummy_item->next;
-//  }
-//  Room *roomcon = room->connections[0];
-//  printf("%s \n", roomcon->name);
-// }
-
 /*
  * function: free_room
  * -------------------
