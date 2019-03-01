@@ -80,11 +80,12 @@ void add_to_backpack(Avatar *avatar, Item *item) {
  *      type     :  enum direction
  *
  * given the passed directional, checks that the corresponding
- *      room exists and relocates the sprite
+ *      room exists and is accessible, relocating the sprite
  *
  * since the enum integer value doubles as the index of the corresponding
  *      directional in the connections vector, relocation is an elegant and
  *		seamless process
+ *
  * ex: {NORTH, EAST, UP, SOUTH, WEST, DOWN}
  *     {  0,     1,   2,   3,    4,    5  }
  *
@@ -94,8 +95,8 @@ void add_to_backpack(Avatar *avatar, Item *item) {
  *
  * go_to_room(DOWN) = go_to_room(5), sets location to room7
  *
- * returns : INVALID if the room doesn't exist (NULL)
- *			 LOCKED_ROOM if the room is locked
+ * returns : INVALID (-1) if the room doesn't exist (NULL)
+ *			 LOCKED_ROOM (-2) if the room is locked
  *           0 upon successful relocation
  * type	   : int
  */
@@ -105,10 +106,12 @@ int go_to_room(Avatar *avatar, enum direction dir) {
 	if (room->connections[dir] == NULL) {
 		return INVALID;
 	}
+
 	if (room->connections[dir]->locked) {
 		printf("the door to the %s is locked\n\n", room->connections[dir]->name);
 		return LOCKED_ROOM;
 	}
+
 	set_location(avatar, room->connections[dir]);
 	return 0;
 }
@@ -123,11 +126,25 @@ int go_to_room(Avatar *avatar, enum direction dir) {
  *		*object  :  name of object in avatar's inventory to be used
  *		type     :  (char *) C string
  *
- * TODO : write the docs for this once implementation finalized
+ * removes the item from the avatar's backpack. Because certain items
+ * 		can only be used in specified locations, the method verifies
+ * 		their compatability with curr_room; or if the item is USELESS
+ * 		and does not conditionally affect the game state
  *
- * returns  :  INVALID if the item is not in the backpack OR
- *               if the item is not useable in the current room
- *             "ret" if the item is used successfully
+ *		ex) apple has the effect of being eaten but doesn't change the state
+ *				of the player or the room
+ *
+ * if the check is successful, the item's use_description is printed out to notify
+ * 		the player that the action successfully transpired. The item is consumed
+ * 		upon use and memory is freed back to the heap
+ *
+ * if unsuccessful, the item is placed back into the backpack as if nothing happened
+ *
+ * returns  :  INVALID (-1) if the item is not in the backpack, incompatible with curr_room, or not of type USELESS
+ *             "type" the enum value cooresponding to the use case, non-negative values so that the do-while loop in
+ *			   		adventure.c terminates
+ *			   EDGE CASE: ret is NONE (-1), if an item were accidentally initialized as not of useable "type"
+ *					error would get caught in this method
  * type     :  int
  */
 
@@ -139,13 +156,16 @@ int use(Avatar *avatar, char *object) {
 	if (to_use == NULL) {
 		return INVALID;
 	}
-	// TODO : alter the room, change comparison from room description to room name?
-	if (strcmp(curr_room->name, to_use->use_room) == 0 || to_use->item_enum == USELESS) {
+
+	// checks that the item can be used in the curr_room or if it doesn't have a designated use case
+	if (strcmp(curr_room->name, to_use->use_room) == 0 || to_use->action_type == USELESS) {
 		printf("%s \n", to_use->use_description);
-		int ret = to_use->item_enum;
+		// type is the termination condition for the do-while loop
+		int type = to_use->action_type;
 		free_item(&to_use);
-		return ret;
+		return type;
 	}
+
 	add_item(&(avatar->backpack), to_use);
 	return INVALID;
 }
@@ -193,8 +213,10 @@ int take(Avatar *avatar, char *object) {
  *		type     :  (char *) C string
  *
  * accesses the avatar's inventory and searches for the desired object. If it
- *      exists, removes it frrom the backpack and adds it to the item list of
+ *      exists, removes it from the backpack and adds it to the item list of
  *      the avatar's current room
+ *
+ * opposite of take
  *
  * returns : INVALID if the object is not found in the backpack
  *           0 if transfer is successful
@@ -209,6 +231,7 @@ int drop(Avatar *avatar, char *object) {
 	if (to_drop == NULL) {
 		return INVALID;
 	}
+
 	add_item(&(curr_room->items), to_drop);
 	return 0;
 }
@@ -220,20 +243,28 @@ int drop(Avatar *avatar, char *object) {
  *      *avatar  :  specified sprite in existing game state
  *      type     :  (Avatar *) pointer to Avatar struct
  *
- * accesses the avatar's current location, prints out the description of room,
- *      all the items in it, and all the possible connections.
+ * accesses the avatar's current location, printing out the description of the room,
+ *      all the items in it, and all the possible connections. This combination of textual
+ * 		output gives the player a holistic visual representation of their environment
  *
  * returns  :  void
  */
 
 void look(Avatar *avatar) {
 	Room *curr_room = get_location(avatar);
+
+	// room description
 	printf("you look around and find yourself in ");
 	printf("%s\n", curr_room->description);
+
+	// items overview
 	printf("\nafter some searching, you discover \n");
 	list_items(&(curr_room->items));
+
+	// connection possibilities
 	printf("\nyou can go: \n");
 	list_connections(curr_room);
+
 	printf("\n");
 }
 
@@ -246,9 +277,9 @@ void look(Avatar *avatar) {
  *
  * frees the memory used by:
  *		A) the avatar
-        B) the items in the avatar's backpack (free_items)
-                C) all the rooms that the avatar is in and their connections (free_rooms)
-                and points the avatar's pointer to NULL
+ *      B) the items in the avatar's backpack (free_items)
+ *      C) all the rooms that the avatar is in and their connections (free_rooms)
+ *         		and points the avatar's pointer to
  *
  * returns  :  void
  */
