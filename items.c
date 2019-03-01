@@ -17,18 +17,22 @@
  *		*use_description  :  action completed when the item is used
  *		type              :  (char *) C string
  *
+ *		action_type       :  use case corresponding to the item
+ *		type              :  enum use_cases
+ *
  *		*next             :  next link in the item list (used to represent inventories)
  *		type              :  (Item *) pointer to Item struct
  *
  * constructs a new Item struct, represented as a linked list node. Also,
  *      assigns the Item an executable message (use_description) when used
- *      in the corresponding room (use_room)
+ *      in the corresponding room (use_room). Action_type is a number that
+ * 		relates to the appropriate function to be executed upon the use of this item
  *
  * returns : pointer to the new struct
  * type	   : (Item *)
  */
 
-Item *useable_items(char *name, char *description, char *use_room, char *use_description, enum item_enum item_enum, Item *next) {
+Item *useable_items(char *name, char *description, char *use_room, char *use_description, enum use_cases action_type, Item *next) {
 	Item *new_item = NULL;
 	new_item = (Item *) malloc(sizeof(Item));
 
@@ -37,12 +41,13 @@ Item *useable_items(char *name, char *description, char *use_room, char *use_des
 		printf("malloc failed\n");
 		exit(EXIT_FAILURE);
 	}
+
 	// field assignments
 	new_item->name = name;
 	new_item->description = description;
 	new_item->use_room = use_room;
 	new_item->use_description = use_description;
-	new_item->item_enum = item_enum;
+	new_item->action_type = action_type;
 	new_item->next = next;
 
 	return new_item;
@@ -63,7 +68,7 @@ Item *useable_items(char *name, char *description, char *use_room, char *use_des
  *		type              :  (Item *) pointer to Item struct
  *
  * same functionality as useable_items but creates an item that
- *      does not directly interact with the game state
+ *      does not directly interact with the game state (NONE action_type)
  *
  * returns : pointer to the new struct
  * type	   : (Item *)
@@ -104,10 +109,7 @@ Item *item_next(Item *item) {
  */
 
 void add_item(Item **list, Item *to_add) {
-	if (*list == NULL) {
-		*list = to_add;
-		return;
-	}
+	// if list is empty, to_add next is NULL
 	to_add->next = *list;
 	*list = to_add;
 }
@@ -127,11 +129,11 @@ void add_item(Item **list, Item *to_add) {
  *      contains the desired object. If object is found, it is removed from the list
  *
  * returns : NULL if the inventory is empty or object is not found
- *             ret_ptr (pointer to the Item being removed)
+ *           target_ptr (pointer to the Item being removed)
  */
 
 Item *remove_item(Item **list, char *object) {
-	Item *dummy = *list, *prev = NULL, *ret_ptr = NULL;
+	Item *dummy = *list, *prev = NULL, *target_ptr = NULL;
 
 	// checks if the inventory is empty
 	if (dummy == NULL) {
@@ -140,10 +142,10 @@ Item *remove_item(Item **list, char *object) {
 
 	//if head has the target node
 	if (dummy != NULL && strcmp(dummy->name, object) == 0) {
-		ret_ptr = dummy;
+		target_ptr = dummy;
 		*list = dummy->next;
 		dummy->next = NULL;
-		return ret_ptr;
+		return target_ptr;
 	}
 
 	// scans the list until object is found, terminating at the end
@@ -153,36 +155,45 @@ Item *remove_item(Item **list, char *object) {
 		dummy = dummy->next;
 	}
 
-	// sets ret_ptr to the Item to be removed
-	ret_ptr = prev->next;
+	// sets target_ptr to the Item to be removed
+	target_ptr = prev->next;
 
 	// object is not found
-	if (ret_ptr == NULL) {
+	if (target_ptr == NULL) {
 		return NULL;
 	}
 
 	// removal
 	prev->next = dummy->next;
-	ret_ptr->next = NULL;
-	return ret_ptr;
+	target_ptr->next = NULL;
+
+	/*
+	 * do not free in this method because object may still be required
+	 * 		in other functions where remove_item is utilized
+	 */
+
+	return target_ptr;
 }
 
 /*
  * function: list_items
  * --------------------
  * params:
- *      **list           :  head of the list of items to be listed
- *		type             :  (Item **) pointer to a pointer of an Item struct
+ *      **list  :  head of the list of Items to be printed out
+ *		type    :  (Item **) pointer to a pointer of an Item struct
  *
- * prints out all items' names in **list and their descriptions
+ * prints out the names of the items in **list as well as their descriptions
  *
  * returns : void
  */
 
 void list_items(Item **list) {
+	// if the list is empty
 	if (*list == NULL) {
 		printf("->nothing\n");
 	}
+
+	// iteration till the end of the list
 	Item *dummy = *list;
 	while (dummy != NULL) {
 		printf("->%s, %s \n", dummy->name, dummy->description);
@@ -194,8 +205,8 @@ void list_items(Item **list) {
  * function: free_item
  * -------------------
  * params:
- *      **to_free        :  item to be freed
- *		type             :  (Item **) pointer to a pointer of an Item struct
+ *      **to_free  :  item to be freed
+ *		type       :  (Item **) pointer to a pointer of an Item struct
  *
  * frees the item then sets its pointer to NULL
  *
@@ -211,18 +222,20 @@ void free_item(Item **to_free) {
  * function: free_items
  * --------------------
  * params:
- *      **list           :  head of the list of items to be freed
- *		type             :  (Item **) pointer to a pointer of an Item struct
+ *      **list  :  head of the list of items to be freed
+ *		type    :  (Item **) pointer to a pointer of an Item struct
  *
- * recursively calls itself to free the whole list using calls free_item
+ * recursively calls itself to free the whole list using free_item calls
  *
  * returns : void
  */
 
 void free_items(Item **list) {
+	// base case: list is empty
 	if (*list == NULL) {
 		return;
 	}
+
 	// backwards recursion to iterate through list
 	free_items(&((*list)->next));
 	free_item(list);

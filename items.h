@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #define INVALID -1
+
 /*
  * struct: item
  * ------------
@@ -11,19 +12,20 @@
  *      to alter the state of the room that the player is currently in
  */
 
-enum item_enum {NONE = -1, USELESS, PRISON_KEY, ORNATE_KEY, CRUDDY_KEY};
+// enumerates the useable items in the implementation of this game
+enum use_cases {NONE = -1, USELESS, PRISON_KEY, ORNATE_KEY, CRUDDY_KEY};
 
 typedef struct item {
 	char *name;
 	char *description;
 	char *use_room;
 	char *use_description;
-	enum item_enum item_enum;
+	enum use_cases action_type;
 	struct item *next;
 } Item;
 
 // constructors
-Item *useable_items(char* name, char* description, char *use_room, char *use_description, enum item_enum item_enum, Item *next);
+Item *useable_items(char* name, char* description, char *use_room, char *use_description, enum use_cases action_type, Item *next);
 
 Item *items(char* name, char* description, Item *next);
 
