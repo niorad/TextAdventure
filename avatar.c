@@ -48,28 +48,6 @@ void set_location(Avatar *avatar, Room* room){
 }
 
 /*
- * function: add_to_backpack
- * --------------------------
- * params:
- *      *avatar  :  specified sprite in existing game state
- *      type     :  (Avatar *) pointer to Avatar struct
- *
- *      *item    :  object to be added to backpack
- *      type     :  (Item *) pointer to Item struct
- *
- * adds the specified item to the avatar's inventory
- *      to avoid using additional memory for a tail pointer, items
- *      are added to the front of the list
- *
- * returns : void (no scenario exists when addition to linked list fails)
- */
-
-void add_to_backpack(Avatar *avatar, Item *item) {
-	item->next = avatar->backpack;
-	avatar->backpack = item;
-}
-
-/*
  * function: go_to_room
  * --------------------------
  * params:

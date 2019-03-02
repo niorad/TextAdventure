@@ -24,9 +24,6 @@ Room *get_location(Avatar *avatar);
 // setter methods
 void set_location(Avatar *avatar, Room *room);
 
-// adds an item to the backpack
-void add_to_backpack(Avatar *avatar, Item *item);
-
 //changes the room that the avatar is currently in
 int go_to_room(Avatar *avatar, enum direction dir);
 
