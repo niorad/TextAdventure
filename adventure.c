@@ -200,6 +200,7 @@ int play_game() {
 	int arg_num;
 	// initial look command to get the game started
 	look(player);
+	// game loop
 	while (!game_over) {
 		arg_num = get_command(player);
 		// if an item of type PRISON_KEY is used, opens the north connection (item alters the state of a room that the avatar is in)

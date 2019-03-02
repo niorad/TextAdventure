@@ -143,6 +143,7 @@ Item *remove_item(Item **list, char *object) {
 	//if head has the target node
 	if (dummy != NULL && strcmp(dummy->name, object) == 0) {
 		target_ptr = dummy;
+		// removal involves simply setting the head to the next node
 		*list = dummy->next;
 		dummy->next = NULL;
 		return target_ptr;

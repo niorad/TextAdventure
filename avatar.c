@@ -81,16 +81,18 @@ void set_location(Avatar *avatar, Room* room){
 
 int go_to_room(Avatar *avatar, enum direction dir) {
 	Room *room = get_location(avatar);
+	// if room does not exist
 	if (room->connections[dir] == NULL) {
 		return INVALID;
 	}
-
+	// if locked, denies access
 	if (room->connections[dir]->locked) {
 		printf("the door to the %s is locked\n\n", room->connections[dir]->name);
 		return LOCKED_ROOM;
 	}
-
+	// updates the avatar's location
 	set_location(avatar, room->connections[dir]);
+
 	return 0;
 }
 
@@ -143,8 +145,9 @@ int use(Avatar *avatar, char *object) {
 		free_item(&to_use);
 		return type;
 	}
-
+	// adds the item back to inventory if not used
 	add_item(&(avatar->backpack), to_use);
+
 	return INVALID;
 }
 
@@ -169,14 +172,16 @@ int use(Avatar *avatar, char *object) {
 
 int take(Avatar *avatar, char *object) {
 	Room *curr_room = get_location(avatar);
+	// removes object from the room's inventory
 	Item *to_take = remove_item(&(curr_room->items), object);
 
 	// checks that object is in the curr_room's item list
 	if (to_take == NULL) {
 		return -1;
 	}
-
+	// adds the item to the avatar's backpack
 	add_item(&(avatar->backpack), to_take);
+
 	return 0;
 }
 
@@ -203,14 +208,16 @@ int take(Avatar *avatar, char *object) {
 
 int drop(Avatar *avatar, char *object) {
 	Room *curr_room = get_location(avatar);
+	// removes object from the avatar's backpack
 	Item *to_drop = remove_item(&(avatar->backpack), object);
 
 	// checks that object is in avatar's backpack
 	if (to_drop == NULL) {
 		return INVALID;
 	}
-
+	// adds the item to
 	add_item(&(curr_room->items), to_drop);
+
 	return 0;
 }
 
@@ -263,6 +270,7 @@ void look(Avatar *avatar) {
  */
 
 void free_avatar(Avatar **to_free) {
+	// modular implementation: freeing avatar frees all associated structs
 	free_rooms(&((*to_free)->location), NODIR);
 	free_items(&((*to_free)->backpack));
 	free(*to_free);
