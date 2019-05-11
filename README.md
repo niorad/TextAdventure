@@ -1,5 +1,5 @@
 
-TextAdventure - Brendon Ky, Deniz Guler, Valeriy Soltan
+TextAdventure- Brendon Ky, Deniz Guler, Valeriy Soltan
 implementation of a text adventure game using the C programming language
 
 Files:
@@ -50,6 +50,7 @@ rooms.c/rooms.h
   - utilizes the free function in items.c
 
  Game Requirements:
+ 
     - our game has 10 rooms (all are initialized in the init_game method)
 
     - all of our rooms have the potential to contain items and many do (Room.items)
